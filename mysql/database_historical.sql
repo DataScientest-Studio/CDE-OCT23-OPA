@@ -6,11 +6,11 @@ USE Historical_Data;
 
 -- Create table DT_EXCHANGES
 CREATE TABLE IF NOT EXISTS DT_EXCHANGES (
-    id_exchange VARCHAR(50) NOT NULL,
+    id_exchange INT AUTO_INCREMENT PRIMARY KEY,
     exchange_1 VARCHAR(50) NOT NULL,
     exchange_2 VARCHAR(50) NOT NULL,
-    creation_date VARCHAR(50) NOT NULL,
-    PRIMARY KEY (id_exchange)
+    exchange VARCHAR NOT NULL,
+    creation_date VARCHAR(50) NOT NULL
 );
 
 -- Create table DT_TIME
@@ -33,10 +33,9 @@ CREATE TABLE IF NOT EXISTS FT_DAILY_DATA (
     Close DECIMAL(18, 0) NOT NULL,
     adj_close DECIMAL(18, 0) NOT NULL,
     Volume DECIMAL(18, 0) NOT NULL,
-    id_exchange VARCHAR(50) NOT NULL,
+    Exchange VARCHAR NOT NULL,
+    id_exchange INT NOT NULL,
     id_date VARCHAR(8) NOT NULL,
-    id_exchange_date VARCHAR(8) NOT NULL,
-    PRIMARY KEY (id_exchange_date),
     CONSTRAINT FK_FT_DAILY_DATA_DT_EXCHANGES FOREIGN KEY (id_exchange) REFERENCES DT_EXCHANGES (id_exchange),
     CONSTRAINT FK_FT_DAILY_DATA_DT_TIME FOREIGN KEY (id_date) REFERENCES DT_TIME (id_date)
 );
