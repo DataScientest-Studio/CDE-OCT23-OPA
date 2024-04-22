@@ -9,7 +9,7 @@ CREATE TABLE IF NOT EXISTS DT_EXCHANGES (
     id_exchange INT AUTO_INCREMENT PRIMARY KEY,
     exchange_1 VARCHAR(50) NOT NULL,
     exchange_2 VARCHAR(50) NOT NULL,
-    exchange VARCHAR NOT NULL,
+    exchange VARCHAR(50) NOT NULL,
     creation_date VARCHAR(50) NOT NULL
 );
 
