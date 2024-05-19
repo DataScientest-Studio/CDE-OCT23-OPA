@@ -5,6 +5,7 @@ from IPython.display import display, HTML
 import sqlite3
 import mysql.connector
 import pyarrow
+import argparse
 
 
 def extract_data(exchange):
@@ -195,12 +196,9 @@ def load_hour_data(dataframe):
     # Close the cursor and the connection
     cursor.close()
     connection.close()
-
-
-
-if __name__ == "__main__":
-
-    exchange = 'BTC-USD'
+    
+def load_data(exchange):
+    
     daily_data, hour_data = extract_data(exchange)
 
     daily_data = transform_daily(daily_data, exchange)
@@ -217,6 +215,15 @@ if __name__ == "__main__":
     load_daily_data(daily_data)
 
     load_hour_data(hour_data)
+    
+
+
+    
+if __name__ == "__main__":
+    parser = argparse.ArgumentParser(description="Load historical data for a given exchange.")
+    parser.add_argument("exchange", type=str, help="The exchange symbol to download data for.")
+    args = parser.parse_args()
+    load_data(args.exchange)
 
 
 
