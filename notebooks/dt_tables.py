@@ -25,13 +25,28 @@ def generate_time_dimension_table():
     except Exception as e:
         logger.error(f"Couldn't create the MySQL connection due to: {e}")
 
+
     table_name = 'DT_TIME'
+    
+    # Truncate table:
+    sql_delete = f"""
+        DELETE FROM {table_name}
+        """
+    
+    cursor.execute(sql_delete)
+    
+    print(f"Data from {table_name} deleted")
+    
+    
+    
+    # Insert data:
     actual_date = datetime.now()
+    ending_date = datetime.now() + timedelta(days=365 * 3)
     beginning_date = actual_date - timedelta(days=365 * 3)
     data = []
 
     date_1 = beginning_date
-    while date_1 <= actual_date:
+    while date_1 <= ending_date:
         id_date = date_1.strftime("%Y%m%d")
         date = date_1.strftime("%Y-%m-%d")
         calendar_year = date_1.strftime("%Y")
@@ -111,7 +126,6 @@ criptos = [
     {"exchange_1": "WAVES", "exchange_2": "USD", "creation_date": "2016-06-02"},
     {"exchange_1": "COMP", "exchange_2": "USD", "creation_date": "2020-06-15"},
     {"exchange_1": "HBAR", "exchange_2": "USD", "creation_date": "2019-07-06"},
-    {"exchange_1": "THETA", "exchange_2": "USD", "creation_date": "2019-01-23"},
     {"exchange_1": "FTM", "exchange_2": "USD", "creation_date": "2018-12-11"},
     {"exchange_1": "GRT", "exchange_2": "USD", "creation_date": "2020-12-15"},
     {"exchange_1": "ETC", "exchange_2": "USD", "creation_date": "2015-07-24"},
@@ -144,7 +158,17 @@ def generate_dt_exchanges_table():
         logger.info('MySQL server connection is successful')
     except Exception as e:
         logger.error(f"Couldn't create the MySQL connection due to: {e}")
+    
+    #Truncate table
+    sql_delete = f"""
+        DELETE FROM DT_EXCHANGES;
+        """
+    cursor.execute(sql_delete)
+    
+    print(f"Data from DT_EXCHANGES deleted")
         
+
+    #Insert data
     cursor = connection.cursor()
 
     # SQL Consult

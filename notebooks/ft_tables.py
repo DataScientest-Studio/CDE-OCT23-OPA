@@ -109,7 +109,14 @@ def load_daily_data(dataframe):
     print("MySQL DB Connected")
 
     cursor = connection.cursor()
-
+    
+    #Truncate table
+    exchange = dataframe['exchange'].unique()[0]
+    
+    cursor.execute(f"""DELETE FROM FT_DAILY_DATA WHERE Exchange = '{exchange}'""")
+    
+    
+    #Insert data
     cursor.execute("""SET FOREIGN_KEY_CHECKS = 0""")
 
 
@@ -149,8 +156,17 @@ def load_hour_data(dataframe):
         database = 'Historical_Data'
     )
     print("MySQL DB Connected")
+    
+    
 
     cursor = connection.cursor()
+    
+    #Truncate table
+    exchange = dataframe['exchange'].unique()[0]
+    
+    cursor.execute(f"""DELETE FROM FT_HOUR_DATA WHERE Exchange = '{exchange}'""")
+    
+    #Insert data
 
     cursor.execute("""SET FOREIGN_KEY_CHECKS = 0""")
 
