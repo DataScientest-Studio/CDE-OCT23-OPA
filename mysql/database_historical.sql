@@ -60,3 +60,35 @@ CREATE TABLE IF NOT EXISTS FT_HOUR_DATA (
 
 
 
+-- Create database Historical_Data if it doesn't exist
+CREATE DATABASE IF NOT EXISTS ML;
+
+-- Switch to the created database
+USE ML;
+
+
+CREATE TABLE IF NOT EXISTS Models_Results (
+    Date DATE NOT NULL,
+    Exchange VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    MSE float NOT NULL,
+    RMSE float NOT NULL,
+    MAE float NOT NULL,
+    R2 float NOT NULL
+);
+
+
+CREATE TABLE IF NOT EXISTS Predictions (
+    Date DATE NOT NULL,
+    Exchange VARCHAR(50) NOT NULL,
+    Model VARCHAR(50) NOT NULL,
+    y_train float,
+    y_test float,
+    predictions float,
+    X_train float,
+    X_test float
+
+);
+
+
+
