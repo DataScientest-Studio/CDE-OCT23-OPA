@@ -38,6 +38,8 @@ def metrics_scikit_learn(y_test, predictions):
     return mse, rmse, mae, r2
 
 def daily_models(exchange):
+    temporality = 'daily'
+    
     connection = mysql.connector.connect(
         user='root',
         password='root',
@@ -75,8 +77,8 @@ def daily_models(exchange):
     y_test = y_test.astype(int)
 
     # Initialize an empty DataFrame for metrics
-    metrics_df = pd.DataFrame(columns=['Date', 'Exchange', 'Model', 'MSE', 'RMSE', 'MAE', 'R2'])
-    predictions_df = pd.DataFrame(columns=['Date', 'Exchange', 'Model', 'y_train', 'y_test', 'X_train', 'X_test', 'predictions'])
+    metrics_df = pd.DataFrame(columns=['Date', 'Exchange', 'Model', 'MSE', 'RMSE', 'MAE', 'R2', 'Temporality'])
+    
     # Get the current date
     execution_date = datetime.now().strftime('%Y-%m-%d')
 
@@ -90,7 +92,8 @@ def daily_models(exchange):
             'MSE': [metrics[0]],
             'RMSE': [metrics[1]],
             'MAE': [metrics[2]],
-            'R2': [metrics[3]]
+            'R2': [metrics[3]],
+            'Temporality': [temporality]
         })
         metrics_df = pd.concat([metrics_df, temp_df], ignore_index=True)
         
@@ -132,10 +135,10 @@ def daily_models(exchange):
     plt.title('Prediction vs. Reality')
     
     # Create a directory to save plots if it doesn't exist
-    if not os.path.exists('dataviz'):
-        os.makedirs('dataviz')
+    if not os.path.exists('dataviz/daily'):
+        os.makedirs('dataviz/daily')
         
-    plot_filename = f'dataviz/{exchange}_{execution_date}_prediction_vs_reality.png'
+    plot_filename = f'dataviz/daily/{exchange}_{execution_date}.png'
 
     # Check if the file already exists
     if os.path.exists(plot_filename):
@@ -151,21 +154,22 @@ def insert_into_db(metrics_df, connection):
     cursor = connection.cursor()
     
     
+    
     delete_query = """
     DELETE FROM Models_Results
-    WHERE Date = %s AND Exchange = %s AND Model = %s
+    WHERE Date = %s AND Exchange = %s AND Model = %s AND Temporality = %s
     """
     
     metrics_df_insert_query = """
-    INSERT INTO Models_Results (Date, Exchange, Model, MSE, RMSE, MAE, R2)
-    VALUES(%s, %s, %s, %s, %s, %s, %s)
+    INSERT INTO Models_Results (Date, Exchange, Model, MSE, RMSE, MAE, R2, Temporality)
+    VALUES(%s, %s, %s, %s, %s, %s, %s, %s)
     """
     
     #Insert data
     cursor.execute("""SET FOREIGN_KEY_CHECKS = 0""")
     for index, row in metrics_df.iterrows():
         # Delete existing records with the same date, exchange, and model
-        cursor.execute(delete_query, (row['Date'], row['Exchange'], row['Model']))
+        cursor.execute(delete_query, (row['Date'], row['Exchange'], row['Model'], row['Temporality']))
         
         # Insert the new record
         cursor.execute(metrics_df_insert_query, tuple(row))

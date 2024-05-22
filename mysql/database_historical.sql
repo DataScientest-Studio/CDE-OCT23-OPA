@@ -70,6 +70,7 @@ USE ML;
 CREATE TABLE IF NOT EXISTS Models_Results (
     Date DATE NOT NULL,
     Exchange VARCHAR(50) NOT NULL,
+    Temporality VARCHAR(100) NOT NULL,
     Model VARCHAR(50) NOT NULL,
     MSE float NOT NULL,
     RMSE float NOT NULL,
