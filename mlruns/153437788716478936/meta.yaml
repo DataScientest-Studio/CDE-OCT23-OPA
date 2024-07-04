@@ -1,0 +1,6 @@
+artifact_location: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/153437788716478936
+creation_time: 1720129691187
+experiment_id: '153437788716478936'
+last_update_time: 1720129691187
+lifecycle_stage: active
+name: ts_into_features_Hourly_LR
