@@ -1,0 +1,6 @@
+artifact_location: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/764417049649893638
+creation_time: 1720357367007
+experiment_id: '764417049649893638'
+last_update_time: 1720357367007
+lifecycle_stage: active
+name: ts_into_features_Daily_LR_^GSPC

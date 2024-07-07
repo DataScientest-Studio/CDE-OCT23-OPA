@@ -1,0 +1,7 @@
+artifact_location: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/850554003053393721
+creation_time: 1720350320106
+experiment_id: '850554003053393721'
+last_update_time: 1720351745398
+lifecycle_stage: deleted
+name: Daily_Model_Original_XGB
+tags: {}

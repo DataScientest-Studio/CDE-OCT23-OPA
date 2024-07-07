@@ -1,0 +1,16 @@
+artifact_uri: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/153437788716478936/f69b6a3b6ac547d7802b1db4b0f708fb/artifacts
+deleted_time: 1720357290789
+end_time: 1720129696979
+entry_point_name: ''
+experiment_id: '153437788716478936'
+lifecycle_stage: deleted
+run_id: f69b6a3b6ac547d7802b1db4b0f708fb
+run_name: ts_into_features_Hourly_LR_BTC-USD
+run_uuid: f69b6a3b6ac547d7802b1db4b0f708fb
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720129691382
+status: 3
+tags: []
+user_id: ubuntu

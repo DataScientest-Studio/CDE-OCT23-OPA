@@ -1,0 +1,29 @@
+artifact_path: daily_model_original_XGB
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.8.10
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.3.2
+mlflow_version: 2.9.2
+model_size_bytes: 349131
+model_uuid: c9aab30212ec400595d6652c1579bf42
+run_id: 81cd047f2eb04a54ba9043553cf8aa2f
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  type: dataframe
+signature:
+  inputs: '[{"type": "long", "name": "Open"}, {"type": "long", "name": "High"}, {"type":
+    "long", "name": "Low"}, {"type": "long", "name": "Volume"}]'
+  outputs: '[{"type": "float"}]'
+  params: null
+utc_time_created: '2024-07-07 11:11:39.759568'

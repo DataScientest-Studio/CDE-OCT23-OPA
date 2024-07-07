@@ -1,0 +1,15 @@
+artifact_uri: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/145913292103049613/53fa0b1f0cc947efa423fee4492c80ed/artifacts
+end_time: 1720357378885
+entry_point_name: ''
+experiment_id: '145913292103049613'
+lifecycle_stage: active
+run_id: 53fa0b1f0cc947efa423fee4492c80ed
+run_name: ts_into_features_Daily_XGB_^GSPC_2024-07-07
+run_uuid: 53fa0b1f0cc947efa423fee4492c80ed
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720357375205
+status: 3
+tags: []
+user_id: ubuntu

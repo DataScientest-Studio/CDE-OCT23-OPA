@@ -1,0 +1,6 @@
+artifact_location: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/666918354498658808
+creation_time: 1720357299938
+experiment_id: '666918354498658808'
+last_update_time: 1720357299938
+lifecycle_stage: active
+name: ts_into_features_Hourly_LR_ETH-USD

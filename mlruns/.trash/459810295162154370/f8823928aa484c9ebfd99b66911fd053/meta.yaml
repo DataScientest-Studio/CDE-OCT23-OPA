@@ -1,0 +1,16 @@
+artifact_uri: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/459810295162154370/f8823928aa484c9ebfd99b66911fd053/artifacts
+deleted_time: 1720351748583
+end_time: 1720350711202
+entry_point_name: ''
+experiment_id: '459810295162154370'
+lifecycle_stage: deleted
+run_id: f8823928aa484c9ebfd99b66911fd053
+run_name: Daily_Model_Original_LR_ETH-USD
+run_uuid: f8823928aa484c9ebfd99b66911fd053
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720350707660
+status: 3
+tags: []
+user_id: ubuntu

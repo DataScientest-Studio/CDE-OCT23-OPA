@@ -1,0 +1,6 @@
+artifact_location: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/528752032886494619
+creation_time: 1720357294710
+experiment_id: '528752032886494619'
+last_update_time: 1720357294710
+lifecycle_stage: active
+name: ts_into_features_Hourly_LGB_BTC-USD

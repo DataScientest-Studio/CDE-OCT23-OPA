@@ -25,7 +25,9 @@ def generate_time_dimension_table():
     except Exception as e:
         logger.error(f"Couldn't create the MySQL connection due to: {e}")
 
-
+    #   Disable foreign key checks
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+    
     table_name = 'DT_TIME'
     
     # Truncate table:
@@ -34,6 +36,8 @@ def generate_time_dimension_table():
         """
     
     cursor.execute(sql_delete)
+    # Re-enable foreign key checks
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
     
     print(f"Data from {table_name} deleted")
     
@@ -135,11 +139,17 @@ criptos = [
     {"exchange_1": "SUSHI", "exchange_2": "USD", "creation_date": "2020-08-26"},
     {"exchange_1": "YFI", "exchange_2": "USD", "creation_date": "2020-07-17"},
     {"exchange_1": "SNX", "exchange_2": "USD", "creation_date": "2017-09-26"},
-    {"exchange_1": "REN", "exchange_2": "USD", "creation_date": "2018-02-20"}
+    {"exchange_1": "REN", "exchange_2": "USD", "creation_date": "2018-02-20"},
+    {"exchange_1": "^GSPC", "exchange_2": "", "creation_date": "1957-03-04"}
 ]
 
+#for cripto in criptos:
+#    cripto["exchange"] = cripto["exchange_1"] + "-" + cripto["exchange_2"]
 for cripto in criptos:
-    cripto["exchange"] = cripto["exchange_1"] + "-" + cripto["exchange_2"]
+    exchange_1 = cripto["exchange_1"]
+    exchange_2 = cripto["exchange_2"]
+    cripto["exchange"] = f"{exchange_1}-{exchange_2}" if exchange_2 else exchange_1
+    
     
         
         
@@ -159,11 +169,16 @@ def generate_dt_exchanges_table():
     except Exception as e:
         logger.error(f"Couldn't create the MySQL connection due to: {e}")
     
+    # Disable foreign key checks
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 0;")
+    
     #Truncate table
     sql_delete = f"""
         DELETE FROM DT_EXCHANGES;
         """
     cursor.execute(sql_delete)
+
+    cursor.execute("SET FOREIGN_KEY_CHECKS = 1;")
     
     print(f"Data from DT_EXCHANGES deleted")
         

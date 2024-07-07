@@ -1,0 +1,16 @@
+artifact_uri: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/850554003053393721/81cd047f2eb04a54ba9043553cf8aa2f/artifacts
+deleted_time: 1720351745398
+end_time: 1720350703444
+entry_point_name: ''
+experiment_id: '850554003053393721'
+lifecycle_stage: deleted
+run_id: 81cd047f2eb04a54ba9043553cf8aa2f
+run_name: Daily_Model_Original_XGB_BTC-USD
+run_uuid: 81cd047f2eb04a54ba9043553cf8aa2f
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720350699738
+status: 3
+tags: []
+user_id: ubuntu

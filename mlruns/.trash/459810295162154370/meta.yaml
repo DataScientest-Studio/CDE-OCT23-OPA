@@ -1,0 +1,7 @@
+artifact_location: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/459810295162154370
+creation_time: 1720124535323
+experiment_id: '459810295162154370'
+last_update_time: 1720351748583
+lifecycle_stage: deleted
+name: Daily_Model_Original_LR
+tags: {}

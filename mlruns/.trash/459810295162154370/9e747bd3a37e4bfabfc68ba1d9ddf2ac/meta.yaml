@@ -1,0 +1,16 @@
+artifact_uri: file:///home/ubuntu/CDE-OCT23-OPA/mlruns/459810295162154370/9e747bd3a37e4bfabfc68ba1d9ddf2ac/artifacts
+deleted_time: 1720351748583
+end_time: 1720350699599
+entry_point_name: ''
+experiment_id: '459810295162154370'
+lifecycle_stage: deleted
+run_id: 9e747bd3a37e4bfabfc68ba1d9ddf2ac
+run_name: Daily_Model_Original_LR_BTC-USD
+run_uuid: 9e747bd3a37e4bfabfc68ba1d9ddf2ac
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720350694115
+status: 3
+tags: []
+user_id: ubuntu
