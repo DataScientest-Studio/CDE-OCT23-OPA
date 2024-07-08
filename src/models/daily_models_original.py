@@ -1,6 +1,6 @@
 import warnings
 warnings.filterwarnings("ignore")
-from mlflow import MlflowClient
+from mlflow import MlflowClient, set_tracking_uri
 import mlflow
 from typing import Tuple
 from tqdm import tqdm
@@ -37,7 +37,7 @@ def train_test_split(
 
 def Daily_model(exchange):
     temporality = 'daily'
-    
+
     connection = mysql.connector.connect(
         user='root',
         password='root',
@@ -78,8 +78,9 @@ def Daily_model(exchange):
     # Get the current date
     execution_date = datetime.now().strftime('%Y-%m-%d')
     
-    # Define tracking_uri
-    client = MlflowClient(tracking_uri="http://127.0.0.1:8080")
+    # Define tracking_uri to point to the MLflow server in Docker
+    #client = MlflowClient(tracking_uri="http://localhost:5000")
+    set_tracking_uri("http://localhost:5000") 
     
     # Define experiment name, run name and artifact_path name
     apple_experiment = mlflow.set_experiment(f"Daily_Model_Original_LR_{exchange}")

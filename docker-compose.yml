@@ -13,5 +13,18 @@ services:
       - ./mysql:/docker-entrypoint-initdb.d
       - my-db:/var/lib/mysql
 
+  mlflow:
+    build:
+      context: ./mlflow
+    image: mlflow_image
+    restart: always
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./mlflow/mlruns:/app/mlruns  # Mount host directory to store mlruns
+      - ./mlflow/mlartifacts:/app/mlartifacts  # Mount host directory to store mlruns
+    command: mlflow server --host 0.0.0.0 --port 5000
+
+
 volumes:
   my-db:

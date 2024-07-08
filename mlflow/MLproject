@@ -1,0 +1,10 @@
+name: docker-example
+
+docker_env:
+    image: mlflow_image
+
+entry_points:
+    main:
+        parameters:
+            exchange: str
+        command: "python "
