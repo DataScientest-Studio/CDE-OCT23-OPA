@@ -6,6 +6,7 @@ from typing import Tuple
 from tqdm import tqdm
 import pandas as pd
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import mysql.connector
 import pyarrow
 import numpy as np
@@ -57,13 +58,25 @@ def Daily_model(exchange):
     df = df_original
     df['id_date'] = pd.to_datetime(df['id_date'], format='%Y%m%d')
     df = df[['Open', 'High', 'Low', 'Close', 'Volume', 'id_date']]
+    
+    # Calculate the cutoff_date as the first day of 6 months ago
+    cutoff_date = (datetime.now() - relativedelta(months=12)).replace(day=1)
+    
+    print(cutoff_date)
 
     # Use the provided train_test_split function
     X_train, y_train, X_test, y_test = train_test_split(
         df,
-        cutoff_date=datetime(2023, 6, 1, 0, 0, 0),
+        cutoff_date=cutoff_date,
         target_column_name='Close'
     )
+
+    # Use the provided train_test_split function
+   # X_train, y_train, X_test, y_test = train_test_split(
+   #     df,
+   #     cutoff_date=datetime(2024, 1, 1, 0, 0, 0),
+   #     target_column_name='Close'
+   # )
 
     X_train = X_train.apply(lambda col: col.astype(int) if col.name != 'id_date' else col)
     X_test = X_test.apply(lambda col: col.astype(int) if col.name != 'id_date' else col)

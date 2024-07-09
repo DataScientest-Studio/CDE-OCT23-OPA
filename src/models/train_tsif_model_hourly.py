@@ -6,6 +6,7 @@ from typing import Tuple
 from tqdm import tqdm
 import pandas as pd
 from datetime import datetime, timedelta
+from dateutil.relativedelta import relativedelta
 import mysql.connector
 import pyarrow
 import numpy as np
@@ -169,12 +170,24 @@ def ts_into_features_hourly_LR(exchange):
     df = pd.concat([features, targets],
                axis = 1)
     
+    #X_train, y_train, X_test, y_test = train_test_split(
+    #    df,
+    #    cutoff_date=datetime(2024, 4, 1, 0, 0, 0),
+    #    target_column_name='target_close_next_hour'
+    #)
+    
+    # Calculate the cutoff_date as the first day of 6 months ago
+    cutoff_date = (datetime.now() - relativedelta(months=3)).replace(day=1)
+    
+    print(cutoff_date)
+
+    # Use the provided train_test_split function
     X_train, y_train, X_test, y_test = train_test_split(
         df,
-        cutoff_date=datetime(2024, 4, 1, 0, 0, 0),
+        cutoff_date=cutoff_date,
         target_column_name='target_close_next_hour'
     )
-    
+        
     # use only past close data
     past_close_columns = [c for c in X_train.columns if c.startswith('close_')]
     X_train_only_numeric = X_train[past_close_columns]

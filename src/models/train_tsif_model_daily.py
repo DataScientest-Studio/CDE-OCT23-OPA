@@ -17,6 +17,7 @@ from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 from sklearn.model_selection import train_test_split
 import argparse
 import os
+from dateutil.relativedelta import relativedelta
 
 
 # FUNCTIONS:
@@ -171,11 +172,24 @@ def ts_into_features_Daily(exchange):
     df = pd.concat([features, targets],
                axis = 1)
     
+    #X_train, y_train, X_test, y_test = train_test_split(
+    #    df,
+    #    cutoff_date=datetime(2023, 5, 1, 0, 0, 0),
+    #    target_column_name='target_open_next_day'
+    #)
+    
+    # Calculate the cutoff_date as the first day of 6 months ago
+    cutoff_date = (datetime.now() - relativedelta(months=14)).replace(day=1)
+    
+    print(cutoff_date)
+
+    # Use the provided train_test_split function
     X_train, y_train, X_test, y_test = train_test_split(
         df,
-        cutoff_date=datetime(2023, 5, 1, 0, 0, 0),
+        cutoff_date=cutoff_date,
         target_column_name='target_open_next_day'
     )
+    
     # use only past close data
     past_close_columns = [c for c in X_train.columns if c.startswith('open_')]
     X_train_only_numeric = X_train[past_close_columns]
