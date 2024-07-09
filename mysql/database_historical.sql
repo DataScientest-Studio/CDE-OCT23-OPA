@@ -59,6 +59,14 @@ CREATE TABLE IF NOT EXISTS FT_HOUR_DATA (
 );
 
 
+-- Create table FT_HOUR_DATA
+CREATE TABLE IF NOT EXISTS FT_FEAR_DATA (
+    Value INT NOT NULL,
+    value_classification VARCHAR(50) NOT NULL,
+    id_date VARCHAR(8) NOT NULL
+);
+
+
 
 -- Create database Historical_Data if it doesn't exist
 CREATE DATABASE IF NOT EXISTS ML;

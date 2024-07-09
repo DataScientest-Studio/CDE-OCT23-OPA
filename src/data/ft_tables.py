@@ -1,14 +1,26 @@
 import yfinance as yf
+import warnings
 import pandas as pd
+import numpy as np
+import requests
 from datetime import datetime, timedelta
 from IPython.display import display, HTML
 import sqlite3
 import mysql.connector
 import pyarrow
 import argparse
+from datetime import datetime
+
+def number_of_days():
+    #The number of days since the fear data was registered
+    first_day = pd.to_datetime('2018-02-01')
+    today = pd.to_datetime(datetime.today().date())
+    days = (today - first_day).days
+    return days
 
 
-def extract_data(exchange):
+
+def extract_data(exchange, days):
     
     #exchange = "BTC-USD"
     get_date = datetime.now()
@@ -26,7 +38,12 @@ def extract_data(exchange):
                     ,start = get_date_730_days_ago_formated
                     ,end = get_date_formated
                     ,interval = "1h")
-    return daily_data, hour_data
+    
+    r = requests.get(f'https://api.alternative.me/fng/?limit={days}')
+    fear_data = pd.DataFrame(r.json()['data'])
+    
+    
+    return daily_data, hour_data, fear_data
 
 
 def transform_daily(dataframe, exchange):
@@ -65,6 +82,14 @@ def transform_hour(dataframe, exchange):
 
     #Drop datetime data
     dataframe = dataframe.drop(columns = ['Datetime'])
+    return dataframe
+
+def transform_fear(dataframe):
+    dataframe.value = dataframe.value.astype(int)
+    dataframe['timestamp'] = pd.to_datetime(dataframe['timestamp'], unit='s')
+    dataframe.rename(columns={'timestamp': 'id_date'}, inplace=True)
+    dataframe['id_date'] = dataframe['id_date'].dt.strftime('%Y%m%d')
+    dataframe = dataframe[['value', 'value_classification', 'id_date']]
     return dataframe
 
 
@@ -197,13 +222,68 @@ def load_hour_data(dataframe):
     cursor.close()
     connection.close()
     
-def load_data(exchange):
     
-    daily_data, hour_data = extract_data(exchange)
+def load_fear_data(dataframe):
+    connection = mysql.connector.connect(
+        user = 'root',
+        password = 'root',
+        host = 'localhost',
+        port = 3306,
+        database = 'Historical_Data'
+    )
+    print("MySQL DB Connected")
+    
+    
 
+    cursor = connection.cursor()
+    
+    cursor.execute(f"""DELETE FROM FT_FEAR_DATA""")
+    
+    #Insert data
+
+    cursor.execute("""SET FOREIGN_KEY_CHECKS = 0""")
+
+
+    # SQL Consult
+    sql_insert = """
+        INSERT INTO FT_FEAR_DATA (Value, value_classification, id_date)
+        VALUES (%s, %s, %s)
+    """
+
+    try:
+        # Iterate on the dataframe
+        for index, row in dataframe.iterrows():
+            cursor.execute(sql_insert, tuple(row))
+        
+        # Confirm the changes on the database
+        connection.commit()
+        print("Data inserted correctly on the FEAR_DATA table.")
+    except mysql.connector.Error as error:
+        # Error
+        print("Error inserting the FEAR_DATA:", error)
+        connection.rollback()
+        
+    cursor.execute("""SET FOREIGN_KEY_CHECKS = 1""")
+
+    # Close the cursor and the connection
+    cursor.close()
+    connection.close()
+    
+def load_data(exchange):
+    warnings.filterwarnings("ignore")
+    
+    #the number of days are defined for the fear data
+    days = number_of_days()
+    
+    # DATA EXTRACTION
+    daily_data, hour_data, fear_data = extract_data(exchange, days)
+
+    # DATA TRANSFORMATION
     daily_data = transform_daily(daily_data, exchange)
     hour_data = transform_hour(hour_data, exchange)
-
+    fear_data = transform_fear(fear_data)
+    
+    # DATA INTEGRITY
     df_dt_exchanges = get_id_exchange()
 
     daily_data = pd.merge(daily_data, df_dt_exchanges,
@@ -211,10 +291,13 @@ def load_data(exchange):
 
     hour_data = pd.merge(hour_data, df_dt_exchanges,
                         on = 'exchange', how = 'left')
-
+    
+    # LOAD DATA
     load_daily_data(daily_data)
 
     load_hour_data(hour_data)
+    
+    load_fear_data(fear_data)
     
 
 
