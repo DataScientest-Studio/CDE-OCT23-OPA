@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/256476196096010835/908f834f3b6448f8a3ecdb97e35906cd/artifacts
+end_time: 1720642345435
+entry_point_name: ''
+experiment_id: '256476196096010835'
+lifecycle_stage: active
+run_id: 908f834f3b6448f8a3ecdb97e35906cd
+run_name: ts_into_features_Daily_LGB_BTC-USD_22months_2024-07-10
+run_uuid: 908f834f3b6448f8a3ecdb97e35906cd
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720642341315
+status: 3
+tags: []
+user_id: ubuntu

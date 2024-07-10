@@ -1,0 +1,7 @@
+artifact_location: mlflow-artifacts:/813969110973825121
+creation_time: 1720548683451
+experiment_id: '813969110973825121'
+last_update_time: 1720641977300
+lifecycle_stage: active
+name: ts_into_features_Daily_XGB_BTC-USD
+tags: {}

@@ -1,0 +1,16 @@
+artifact_uri: mlflow-artifacts:/376948473329192613/bc55546dcd8945fb997532bd7bb4b46b/artifacts
+deleted_time: 1720647947278
+end_time: 1720647646915
+entry_point_name: ''
+experiment_id: '376948473329192613'
+lifecycle_stage: deleted
+run_id: bc55546dcd8945fb997532bd7bb4b46b
+run_name: ts_into_features_Hourly_cutoff_test_2024-07-10
+run_uuid: bc55546dcd8945fb997532bd7bb4b46b
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1720647643135
+status: 3
+tags: []
+user_id: ubuntu
