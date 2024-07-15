@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/784017762041084034
+creation_time: 1721074508569
+experiment_id: '784017762041084034'
+last_update_time: 1721074508569
+lifecycle_stage: active
+name: ts_into_features_Daily_LGB_BTC-USD
