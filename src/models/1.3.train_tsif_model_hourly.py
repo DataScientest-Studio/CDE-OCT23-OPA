@@ -163,7 +163,7 @@ def ts_into_features_hourly_LR(exchange):
     
     features, targets = transform_ts_data_into_features_and_target(
     df,
-    input_seq_len=24, # one week of history -> 24*7*1
+    input_seq_len=24*7*1, # one week of history -> 24*7*1
     step_size=24,
     )
     
@@ -177,7 +177,7 @@ def ts_into_features_hourly_LR(exchange):
     #)
     
     # Calculate the cutoff_date as the first day of 6 months ago
-    cutoff_date = (datetime.now() - relativedelta(months=3)).replace(day=1)
+    cutoff_date = (datetime.now() - relativedelta(months=1)).replace(day=1)
     
     print(cutoff_date)
 

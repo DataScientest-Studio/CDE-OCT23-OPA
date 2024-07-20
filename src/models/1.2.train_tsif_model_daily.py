@@ -165,8 +165,8 @@ def ts_into_features_Daily(exchange):
 
     features, targets = transform_ts_data_into_features_and_target(
         df,
-        input_seq_len=31*12, # one week of history -> 24*7*1
-        step_size=24,
+        input_seq_len=31, # one week of history -> 24*7*1
+        step_size=1,
     )
     
     df = pd.concat([features, targets],
@@ -179,7 +179,7 @@ def ts_into_features_Daily(exchange):
     #)
     
     # Calculate the cutoff_date as the first day of 6 months ago
-    cutoff_date = (datetime.now() - relativedelta(months=14)).replace(day=1)
+    cutoff_date = (datetime.now() - relativedelta(months=2)).replace(day=1)
     
     print(cutoff_date)
 

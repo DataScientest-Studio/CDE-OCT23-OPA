@@ -176,7 +176,7 @@ def Daily_model(exchange):
     metrics_LGB = {"mae": mae, "mse": mse, "rmse": rmse, "r2": r2}
     
     # Store information in tracking server
-    with mlflow.start_run(run_name = f"Daily_Model_Original_XGB_{exchange}_{execution_date}") as run:
+    with mlflow.start_run(run_name = f"Daily_Model_Original_LGB_{exchange}_{execution_date}") as run:
         #mlflow.log_params(params)
         mlflow.log_metrics(metrics_LGB)
         mlflow.sklearn.log_model(
