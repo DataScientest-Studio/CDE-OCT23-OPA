@@ -1,0 +1,171 @@
+artifact_path: ts_into_features_Hourly_LGB_BTC-USD
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.8.10
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.3.2
+mlflow_version: 2.14.3
+model_size_bytes: 329335
+model_uuid: d3954c3c9c6446529f41c4598f839a7a
+run_id: 44c59cd64f51446f83938ccbacb1a97e
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  type: dataframe
+signature:
+  inputs: '[{"type": "float", "name": "close_previous_168_hour", "required": true},
+    {"type": "float", "name": "close_previous_167_hour", "required": true}, {"type":
+    "float", "name": "close_previous_166_hour", "required": true}, {"type": "float",
+    "name": "close_previous_165_hour", "required": true}, {"type": "float", "name":
+    "close_previous_164_hour", "required": true}, {"type": "float", "name": "close_previous_163_hour",
+    "required": true}, {"type": "float", "name": "close_previous_162_hour", "required":
+    true}, {"type": "float", "name": "close_previous_161_hour", "required": true},
+    {"type": "float", "name": "close_previous_160_hour", "required": true}, {"type":
+    "float", "name": "close_previous_159_hour", "required": true}, {"type": "float",
+    "name": "close_previous_158_hour", "required": true}, {"type": "float", "name":
+    "close_previous_157_hour", "required": true}, {"type": "float", "name": "close_previous_156_hour",
+    "required": true}, {"type": "float", "name": "close_previous_155_hour", "required":
+    true}, {"type": "float", "name": "close_previous_154_hour", "required": true},
+    {"type": "float", "name": "close_previous_153_hour", "required": true}, {"type":
+    "float", "name": "close_previous_152_hour", "required": true}, {"type": "float",
+    "name": "close_previous_151_hour", "required": true}, {"type": "float", "name":
+    "close_previous_150_hour", "required": true}, {"type": "float", "name": "close_previous_149_hour",
+    "required": true}, {"type": "float", "name": "close_previous_148_hour", "required":
+    true}, {"type": "float", "name": "close_previous_147_hour", "required": true},
+    {"type": "float", "name": "close_previous_146_hour", "required": true}, {"type":
+    "float", "name": "close_previous_145_hour", "required": true}, {"type": "float",
+    "name": "close_previous_144_hour", "required": true}, {"type": "float", "name":
+    "close_previous_143_hour", "required": true}, {"type": "float", "name": "close_previous_142_hour",
+    "required": true}, {"type": "float", "name": "close_previous_141_hour", "required":
+    true}, {"type": "float", "name": "close_previous_140_hour", "required": true},
+    {"type": "float", "name": "close_previous_139_hour", "required": true}, {"type":
+    "float", "name": "close_previous_138_hour", "required": true}, {"type": "float",
+    "name": "close_previous_137_hour", "required": true}, {"type": "float", "name":
+    "close_previous_136_hour", "required": true}, {"type": "float", "name": "close_previous_135_hour",
+    "required": true}, {"type": "float", "name": "close_previous_134_hour", "required":
+    true}, {"type": "float", "name": "close_previous_133_hour", "required": true},
+    {"type": "float", "name": "close_previous_132_hour", "required": true}, {"type":
+    "float", "name": "close_previous_131_hour", "required": true}, {"type": "float",
+    "name": "close_previous_130_hour", "required": true}, {"type": "float", "name":
+    "close_previous_129_hour", "required": true}, {"type": "float", "name": "close_previous_128_hour",
+    "required": true}, {"type": "float", "name": "close_previous_127_hour", "required":
+    true}, {"type": "float", "name": "close_previous_126_hour", "required": true},
+    {"type": "float", "name": "close_previous_125_hour", "required": true}, {"type":
+    "float", "name": "close_previous_124_hour", "required": true}, {"type": "float",
+    "name": "close_previous_123_hour", "required": true}, {"type": "float", "name":
+    "close_previous_122_hour", "required": true}, {"type": "float", "name": "close_previous_121_hour",
+    "required": true}, {"type": "float", "name": "close_previous_120_hour", "required":
+    true}, {"type": "float", "name": "close_previous_119_hour", "required": true},
+    {"type": "float", "name": "close_previous_118_hour", "required": true}, {"type":
+    "float", "name": "close_previous_117_hour", "required": true}, {"type": "float",
+    "name": "close_previous_116_hour", "required": true}, {"type": "float", "name":
+    "close_previous_115_hour", "required": true}, {"type": "float", "name": "close_previous_114_hour",
+    "required": true}, {"type": "float", "name": "close_previous_113_hour", "required":
+    true}, {"type": "float", "name": "close_previous_112_hour", "required": true},
+    {"type": "float", "name": "close_previous_111_hour", "required": true}, {"type":
+    "float", "name": "close_previous_110_hour", "required": true}, {"type": "float",
+    "name": "close_previous_109_hour", "required": true}, {"type": "float", "name":
+    "close_previous_108_hour", "required": true}, {"type": "float", "name": "close_previous_107_hour",
+    "required": true}, {"type": "float", "name": "close_previous_106_hour", "required":
+    true}, {"type": "float", "name": "close_previous_105_hour", "required": true},
+    {"type": "float", "name": "close_previous_104_hour", "required": true}, {"type":
+    "float", "name": "close_previous_103_hour", "required": true}, {"type": "float",
+    "name": "close_previous_102_hour", "required": true}, {"type": "float", "name":
+    "close_previous_101_hour", "required": true}, {"type": "float", "name": "close_previous_100_hour",
+    "required": true}, {"type": "float", "name": "close_previous_99_hour", "required":
+    true}, {"type": "float", "name": "close_previous_98_hour", "required": true},
+    {"type": "float", "name": "close_previous_97_hour", "required": true}, {"type":
+    "float", "name": "close_previous_96_hour", "required": true}, {"type": "float",
+    "name": "close_previous_95_hour", "required": true}, {"type": "float", "name":
+    "close_previous_94_hour", "required": true}, {"type": "float", "name": "close_previous_93_hour",
+    "required": true}, {"type": "float", "name": "close_previous_92_hour", "required":
+    true}, {"type": "float", "name": "close_previous_91_hour", "required": true},
+    {"type": "float", "name": "close_previous_90_hour", "required": true}, {"type":
+    "float", "name": "close_previous_89_hour", "required": true}, {"type": "float",
+    "name": "close_previous_88_hour", "required": true}, {"type": "float", "name":
+    "close_previous_87_hour", "required": true}, {"type": "float", "name": "close_previous_86_hour",
+    "required": true}, {"type": "float", "name": "close_previous_85_hour", "required":
+    true}, {"type": "float", "name": "close_previous_84_hour", "required": true},
+    {"type": "float", "name": "close_previous_83_hour", "required": true}, {"type":
+    "float", "name": "close_previous_82_hour", "required": true}, {"type": "float",
+    "name": "close_previous_81_hour", "required": true}, {"type": "float", "name":
+    "close_previous_80_hour", "required": true}, {"type": "float", "name": "close_previous_79_hour",
+    "required": true}, {"type": "float", "name": "close_previous_78_hour", "required":
+    true}, {"type": "float", "name": "close_previous_77_hour", "required": true},
+    {"type": "float", "name": "close_previous_76_hour", "required": true}, {"type":
+    "float", "name": "close_previous_75_hour", "required": true}, {"type": "float",
+    "name": "close_previous_74_hour", "required": true}, {"type": "float", "name":
+    "close_previous_73_hour", "required": true}, {"type": "float", "name": "close_previous_72_hour",
+    "required": true}, {"type": "float", "name": "close_previous_71_hour", "required":
+    true}, {"type": "float", "name": "close_previous_70_hour", "required": true},
+    {"type": "float", "name": "close_previous_69_hour", "required": true}, {"type":
+    "float", "name": "close_previous_68_hour", "required": true}, {"type": "float",
+    "name": "close_previous_67_hour", "required": true}, {"type": "float", "name":
+    "close_previous_66_hour", "required": true}, {"type": "float", "name": "close_previous_65_hour",
+    "required": true}, {"type": "float", "name": "close_previous_64_hour", "required":
+    true}, {"type": "float", "name": "close_previous_63_hour", "required": true},
+    {"type": "float", "name": "close_previous_62_hour", "required": true}, {"type":
+    "float", "name": "close_previous_61_hour", "required": true}, {"type": "float",
+    "name": "close_previous_60_hour", "required": true}, {"type": "float", "name":
+    "close_previous_59_hour", "required": true}, {"type": "float", "name": "close_previous_58_hour",
+    "required": true}, {"type": "float", "name": "close_previous_57_hour", "required":
+    true}, {"type": "float", "name": "close_previous_56_hour", "required": true},
+    {"type": "float", "name": "close_previous_55_hour", "required": true}, {"type":
+    "float", "name": "close_previous_54_hour", "required": true}, {"type": "float",
+    "name": "close_previous_53_hour", "required": true}, {"type": "float", "name":
+    "close_previous_52_hour", "required": true}, {"type": "float", "name": "close_previous_51_hour",
+    "required": true}, {"type": "float", "name": "close_previous_50_hour", "required":
+    true}, {"type": "float", "name": "close_previous_49_hour", "required": true},
+    {"type": "float", "name": "close_previous_48_hour", "required": true}, {"type":
+    "float", "name": "close_previous_47_hour", "required": true}, {"type": "float",
+    "name": "close_previous_46_hour", "required": true}, {"type": "float", "name":
+    "close_previous_45_hour", "required": true}, {"type": "float", "name": "close_previous_44_hour",
+    "required": true}, {"type": "float", "name": "close_previous_43_hour", "required":
+    true}, {"type": "float", "name": "close_previous_42_hour", "required": true},
+    {"type": "float", "name": "close_previous_41_hour", "required": true}, {"type":
+    "float", "name": "close_previous_40_hour", "required": true}, {"type": "float",
+    "name": "close_previous_39_hour", "required": true}, {"type": "float", "name":
+    "close_previous_38_hour", "required": true}, {"type": "float", "name": "close_previous_37_hour",
+    "required": true}, {"type": "float", "name": "close_previous_36_hour", "required":
+    true}, {"type": "float", "name": "close_previous_35_hour", "required": true},
+    {"type": "float", "name": "close_previous_34_hour", "required": true}, {"type":
+    "float", "name": "close_previous_33_hour", "required": true}, {"type": "float",
+    "name": "close_previous_32_hour", "required": true}, {"type": "float", "name":
+    "close_previous_31_hour", "required": true}, {"type": "float", "name": "close_previous_30_hour",
+    "required": true}, {"type": "float", "name": "close_previous_29_hour", "required":
+    true}, {"type": "float", "name": "close_previous_28_hour", "required": true},
+    {"type": "float", "name": "close_previous_27_hour", "required": true}, {"type":
+    "float", "name": "close_previous_26_hour", "required": true}, {"type": "float",
+    "name": "close_previous_25_hour", "required": true}, {"type": "float", "name":
+    "close_previous_24_hour", "required": true}, {"type": "float", "name": "close_previous_23_hour",
+    "required": true}, {"type": "float", "name": "close_previous_22_hour", "required":
+    true}, {"type": "float", "name": "close_previous_21_hour", "required": true},
+    {"type": "float", "name": "close_previous_20_hour", "required": true}, {"type":
+    "float", "name": "close_previous_19_hour", "required": true}, {"type": "float",
+    "name": "close_previous_18_hour", "required": true}, {"type": "float", "name":
+    "close_previous_17_hour", "required": true}, {"type": "float", "name": "close_previous_16_hour",
+    "required": true}, {"type": "float", "name": "close_previous_15_hour", "required":
+    true}, {"type": "float", "name": "close_previous_14_hour", "required": true},
+    {"type": "float", "name": "close_previous_13_hour", "required": true}, {"type":
+    "float", "name": "close_previous_12_hour", "required": true}, {"type": "float",
+    "name": "close_previous_11_hour", "required": true}, {"type": "float", "name":
+    "close_previous_10_hour", "required": true}, {"type": "float", "name": "close_previous_9_hour",
+    "required": true}, {"type": "float", "name": "close_previous_8_hour", "required":
+    true}, {"type": "float", "name": "close_previous_7_hour", "required": true}, {"type":
+    "float", "name": "close_previous_6_hour", "required": true}, {"type": "float",
+    "name": "close_previous_5_hour", "required": true}, {"type": "float", "name":
+    "close_previous_4_hour", "required": true}, {"type": "float", "name": "close_previous_3_hour",
+    "required": true}, {"type": "float", "name": "close_previous_2_hour", "required":
+    true}, {"type": "float", "name": "close_previous_1_hour", "required": true}]'
+  outputs: '[{"type": "double", "required": true}]'
+  params: null
+utc_time_created: '2024-07-21 09:25:59.852852'

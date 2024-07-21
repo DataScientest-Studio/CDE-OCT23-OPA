@@ -1,0 +1,12 @@
+creation_timestamp: 1721558382269
+current_stage: None
+description: ''
+last_updated_timestamp: 1721558382269
+name: BTC-USD_Daily_Model
+run_id: c941ab46284c4c4d8f8e1b1201739f55
+run_link: ''
+source: mlflow-artifacts:/519643158049464992/c941ab46284c4c4d8f8e1b1201739f55/artifacts/ts_into_features_Daily_LR_BTC-USD
+status: READY
+status_message: null
+user_id: null
+version: 1

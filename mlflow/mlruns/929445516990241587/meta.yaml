@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/929445516990241587
+creation_time: 1721554147761
+experiment_id: '929445516990241587'
+last_update_time: 1721554147761
+lifecycle_stage: active
+name: ts_into_features_Hourly_LGB_ETH-USD

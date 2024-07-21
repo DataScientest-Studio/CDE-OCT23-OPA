@@ -1,0 +1,12 @@
+creation_timestamp: 1721558458789
+current_stage: None
+description: ''
+last_updated_timestamp: 1721558458789
+name: BTC-USD_Hourly_Model
+run_id: 6439237e37be43858da606a7eebd4720
+run_link: ''
+source: mlflow-artifacts:/724873523013892908/6439237e37be43858da606a7eebd4720/artifacts/ts_into_features_Hourly_LR_BTC-USD
+status: READY
+status_message: null
+user_id: null
+version: 1

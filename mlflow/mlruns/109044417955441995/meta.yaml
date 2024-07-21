@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/109044417955441995
+creation_time: 1721553439531
+experiment_id: '109044417955441995'
+last_update_time: 1721553439531
+lifecycle_stage: active
+name: ts_into_features_Daily_LR_ETH-USD

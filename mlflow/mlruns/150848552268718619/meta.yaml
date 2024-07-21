@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/150848552268718619
+creation_time: 1721554462300
+experiment_id: '150848552268718619'
+last_update_time: 1721554462300
+lifecycle_stage: active
+name: TEST_cutoff_ts_into_features_Daily_LR_BTC-USD
