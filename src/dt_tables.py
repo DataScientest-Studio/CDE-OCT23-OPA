@@ -3,6 +3,8 @@ from datetime import datetime, timedelta
 import mysql.connector
 import logging
 
+from functions import database_connection
+
 
 logging.basicConfig(level=logging.INFO,
                     format='%(asctime)s:%(funcName)s:%(levelname)s:%(message)s')
@@ -11,14 +13,7 @@ logger = logging.getLogger("write_mysql")
 
 def generate_time_dimension_table():
     try:
-        connection = mysql.connector.connect(
-            user = 'root',
-            password = 'root',
-            host = 'localhost',
-            port = 3306,
-            database = 'Historical_Data'
-        )
-        print("MySQL DB Connected")
+        connection = database_connection()
         cursor = connection.cursor()
         
         logger.info('MySQL server connection is successful')
@@ -155,14 +150,7 @@ for cripto in criptos:
         
 def generate_dt_exchanges_table():
     try:
-        connection = mysql.connector.connect(
-            user = 'root',
-            password = 'root',
-            host = 'localhost',
-            port = 3306,
-            database = 'Historical_Data'
-        )
-        print("MySQL DB Connected")
+        connection = database_connection()
         cursor = connection.cursor()
         
         logger.info('MySQL server connection is successful')

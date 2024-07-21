@@ -19,8 +19,27 @@ import argparse
 import os
 from dateutil.relativedelta import relativedelta
 
+from functions import database_connection
 
 # FUNCTIONS:
+
+def get_data(exchange):
+    
+    connection = database_connection()    
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM FT_DAILY_DATA WHERE Exchange = '{exchange}'")
+    results = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+            
+    df_original = pd.DataFrame(results, columns=columns)
+    
+    if df_original.empty:
+        print("There is no data")
+        return None
+        
+    else:
+        return df_original
+
 
 def get_cutoff_indices(
     data: pd.DataFrame,
@@ -59,6 +78,7 @@ def transform_ts_data_into_features_and_target(
     assert set(ts_data.columns) == {'datetime', 'Open', 'Exchange'}
 
     exchanges = ts_data['Exchange'].unique()
+    
     #print(exchanges)
     features = pd.DataFrame()
     targets = pd.DataFrame()
@@ -129,56 +149,29 @@ def train_test_split(
     return X_train, y_train, X_test, y_test
 
 
-def metrics_scikit_learn(y_test, predictions):
-    mse = mean_squared_error(y_test, predictions)
-    rmse = np.sqrt(mse)
-    mae = mean_absolute_error(y_test, predictions)
-    r2 = r2_score(y_test, predictions)
-    return mse, rmse, mae, r2
 
 
 def ts_into_features_Daily(exchange):
     temporality = 'daily'
-    
-    connection = mysql.connector.connect(
-        user = 'root',
-        password = 'root',
-        host = 'localhost',
-        port = 3306,
-        database = 'Historical_Data'
-    )
-    print("MySQL DB Connected")
-    
-    cursor = connection.cursor()
-    cursor.execute(f"SELECT * FROM FT_DAILY_DATA WHERE Exchange = '{exchange}'")
 
-    results = cursor.fetchall()
-    columns = [column[0] for column in cursor.description]
+    df_original = get_data(exchange)
 
-    df_original = pd.DataFrame(results, columns=columns)
     df = df_original[['id_date', 'Open','Exchange']]
     df['datetime'] = pd.to_datetime(df['id_date'], format='%Y%m%d')
     df = df[['datetime', 'Open', 'Exchange']]
-
+            
     features, targets = transform_ts_data_into_features_and_target(
         df,
         input_seq_len=31, # one week of history -> 24*7*1
         step_size=1,
     )
-    
+
     df = pd.concat([features, targets],
-               axis = 1)
-    
-    #X_train, y_train, X_test, y_test = train_test_split(
-    #    df,
-    #    cutoff_date=datetime(2023, 5, 1, 0, 0, 0),
-    #    target_column_name='target_open_next_day'
-    #)
-    
+            axis = 1)
+
     # Calculate the cutoff_date as the first day of 6 months ago
     cutoff_date = (datetime.now() - relativedelta(months=2)).replace(day=1)
-    
-    print(cutoff_date)
+        
 
     # Use the provided train_test_split function
     X_train, y_train, X_test, y_test = train_test_split(
@@ -186,12 +179,13 @@ def ts_into_features_Daily(exchange):
         cutoff_date=cutoff_date,
         target_column_name='target_open_next_day'
     )
-    
+        
     # use only past close data
     past_close_columns = [c for c in X_train.columns if c.startswith('open_')]
     X_train_only_numeric = X_train[past_close_columns]
     X_test_only_numeric = X_test[past_close_columns]
     
     return X_test_only_numeric, X_train_only_numeric, y_test, y_train
+    
 
 

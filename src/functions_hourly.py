@@ -18,9 +18,29 @@ from sklearn.model_selection import train_test_split
 import argparse
 import os
 from dateutil.relativedelta import relativedelta
-
+from functions import database_connection
 
 # Functions:
+
+
+
+def get_data(exchange):
+    
+    connection = database_connection()    
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM FT_HOUR_DATA WHERE Exchange = '{exchange}'")
+    results = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+            
+    df_original = pd.DataFrame(results, columns=columns)
+    
+    if df_original.empty:
+        print("There is no data")
+        return None
+        
+    else:
+        return df_original
+    
 
 def get_cutoff_indices(
     data: pd.DataFrame,
@@ -127,25 +147,12 @@ def train_test_split(
 
 # ------------------------------------------------------
 
+    
 def ts_into_features_hourly(exchange):
     temporality = 'hour'
     
-    connection = mysql.connector.connect(
-        user='root',
-        password='root',
-        host='localhost',
-        port=3306,
-        database='Historical_Data'
-    )
-    print("MySQL DB Connected")
+    df_original = get_data(exchange)
     
-    cursor = connection.cursor()
-    cursor.execute(f"SELECT * FROM FT_HOUR_DATA WHERE Exchange = '{exchange}'")
-
-    results = cursor.fetchall()
-    columns = [column[0] for column in cursor.description]
-
-    df_original = pd.DataFrame(results, columns=columns)
     df = df_original[['id_date', 'Hour', 'Close','Exchange']]
 
     df['id_date'] = pd.to_datetime(df['id_date'], format='%Y%m%d')
@@ -165,8 +172,7 @@ def ts_into_features_hourly(exchange):
 
     # Calculate the cutoff_date as the first day of 6 months ago
     cutoff_date = (datetime.now() - relativedelta(months=1)).replace(day=1)
-    
-    print(cutoff_date)
+
 
     # Use the provided train_test_split function
     X_train, y_train, X_test, y_test = train_test_split(

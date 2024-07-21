@@ -11,6 +11,9 @@ import pyarrow
 import argparse
 from datetime import datetime
 
+
+from functions import database_connection
+
 def number_of_days():
     #The number of days since the fear data was registered
     first_day = pd.to_datetime('2018-02-01')
@@ -93,46 +96,60 @@ def transform_fear(dataframe):
     return dataframe
 
 
-def get_id_exchange():
-    connection = mysql.connector.connect(
-        user = 'root',
-        password = 'root',
-        host = 'localhost',
-        port = 3306,
-        database = 'Historical_Data'
-    )
-    print("MySQL DB Connected")
+def get_id_exchange(exchange):
+    connection = database_connection()
 
     cursor = connection.cursor()
 
+    #GET THE CURRENT VALUES
     cursor.execute("SELECT * FROM DT_EXCHANGES")
-
     results = cursor.fetchall()
-
-
     columns = [column[0] for column in cursor.description]
-
-
     df_dt_exchanges = pd.DataFrame(results, columns=columns)
 
+    unique_exchanges = df_dt_exchanges['exchange'].unique()
+    
+    if exchange in unique_exchanges:
+        cursor.close()
+        connection.close()
+        df_dt_exchanges = df_dt_exchanges[['exchange', 'id_exchange']]
+        return df_dt_exchanges
 
-    cursor.close()
-    connection.close()
+    # If the exchange is not currently in our database:
+    else:
+        if '-' in exchange:
+            exchange_1, exchange_2 = exchange.split('-')
+        else:
+            exchange_1 = exchange
+            exchange_2 = ""
+        
+        creation_date = ""
+        
+        insert_row = [exchange_1, exchange_2, creation_date, exchange]
+        
+        # SQL Consult
+        sql_insert_exchange = """
+        INSERT INTO DT_EXCHANGES (exchange_1, exchange_2, creation_date, exchange)
+        VALUES (%s, %s, %s, %s)
+        """
+        
+        print("New exchange inserted")
+        cursor.execute(sql_insert_exchange, insert_row)
+        connection.commit()
 
-    df_dt_exchanges = df_dt_exchanges[['exchange', 'id_exchange']]
-    return df_dt_exchanges
+        cursor.execute("SELECT * FROM DT_EXCHANGES")
+        results = cursor.fetchall()
+        columns = [column[0] for column in cursor.description]
+        df_dt_exchanges = pd.DataFrame(results, columns=columns)
+        df_dt_exchanges = df_dt_exchanges[['exchange', 'id_exchange']]
+        return df_dt_exchanges
+            
+        
 
 
 
 def load_daily_data(dataframe):
-    connection = mysql.connector.connect(
-    user = 'root',
-    password = 'root',
-    host = 'localhost',
-    port = 3306,
-    database = 'Historical_Data'
-    )
-    print("MySQL DB Connected")
+    connection = database_connection()
 
     cursor = connection.cursor()
     
@@ -174,16 +191,7 @@ def load_daily_data(dataframe):
     
     
 def load_hour_data(dataframe):
-    connection = mysql.connector.connect(
-        user = 'root',
-        password = 'root',
-        host = 'localhost',
-        port = 3306,
-        database = 'Historical_Data'
-    )
-    print("MySQL DB Connected")
-    
-    
+    connection = database_connection()
 
     cursor = connection.cursor()
     
@@ -224,17 +232,7 @@ def load_hour_data(dataframe):
     
     
 def load_fear_data(dataframe):
-    connection = mysql.connector.connect(
-        user = 'root',
-        password = 'root',
-        host = 'localhost',
-        port = 3306,
-        database = 'Historical_Data'
-    )
-    print("MySQL DB Connected")
-    
-    
-
+    connection = database_connection()
     cursor = connection.cursor()
     
     cursor.execute(f"""DELETE FROM FT_FEAR_DATA""")
@@ -284,7 +282,8 @@ def load_data(exchange):
     fear_data = transform_fear(fear_data)
     
     # DATA INTEGRITY
-    df_dt_exchanges = get_id_exchange()
+    
+    df_dt_exchanges = get_id_exchange(exchange)
 
     daily_data = pd.merge(daily_data, df_dt_exchanges,
                         on='exchange', how='left')
