@@ -24,7 +24,7 @@ from functions import database_connection
 
 
 
-def get_data(exchange):
+def get_hourly_data(exchange):
     
     connection = database_connection()    
     cursor = connection.cursor()
@@ -151,7 +151,7 @@ def train_test_split(
 def ts_into_features_hourly(exchange):
     temporality = 'hour'
     
-    df_original = get_data(exchange)
+    df_original = get_hourly_data(exchange)
     
     df = df_original[['id_date', 'Hour', 'Close','Exchange']]
 

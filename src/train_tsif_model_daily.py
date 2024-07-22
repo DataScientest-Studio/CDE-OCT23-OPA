@@ -22,14 +22,14 @@ import argparse
 import os
 from dateutil.relativedelta import relativedelta
 
-from functions_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_data
+from functions_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_daily_data
 
 
 def mlflow_daily(exchange):
     
     data_loaded = False
     try:
-        X_test_only_numeric, X_train_only_numeric, y_test, y_train = ts_into_features_Daily(exchange)
+        X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test = ts_into_features_Daily(exchange)
         data_loaded = True
         
     except Exception as e:
@@ -136,14 +136,14 @@ def mlflow_daily(exchange):
         
 def mlflow_daily_register(exchange):
     
-    df_original = get_data(exchange)
+    df_original = get_daily_data(exchange)
     
-    if df_original == None:
+    if len(df_original) < 1:
         return("No data in the database")
     
     else:
         
-        X_test_only_numeric, X_train_only_numeric, y_test, y_train = ts_into_features_Daily(exchange)
+        X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test = ts_into_features_Daily(exchange)
         
         
         execution_date = datetime.now().strftime('%Y-%m-%d')

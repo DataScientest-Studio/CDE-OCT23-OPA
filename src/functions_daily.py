@@ -23,7 +23,7 @@ from functions import database_connection
 
 # FUNCTIONS:
 
-def get_data(exchange):
+def get_daily_data(exchange):
     
     connection = database_connection()    
     cursor = connection.cursor()
@@ -154,7 +154,7 @@ def train_test_split(
 def ts_into_features_Daily(exchange):
     temporality = 'daily'
 
-    df_original = get_data(exchange)
+    df_original = get_daily_data(exchange)
 
     df = df_original[['id_date', 'Open','Exchange']]
     df['datetime'] = pd.to_datetime(df['id_date'], format='%Y%m%d')
@@ -185,7 +185,7 @@ def ts_into_features_Daily(exchange):
     X_train_only_numeric = X_train[past_close_columns]
     X_test_only_numeric = X_test[past_close_columns]
     
-    return X_test_only_numeric, X_train_only_numeric, y_test, y_train
+    return X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test
     
 
 
