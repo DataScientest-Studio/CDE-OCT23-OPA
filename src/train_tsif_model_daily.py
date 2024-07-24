@@ -205,6 +205,20 @@ def mlflow_daily_register(exchange):
         # r2 = r2_score(y_test, XGB_pred_test)
         # metrics_XGB = {"mae": mae, "mse": mse, "rmse": rmse, "r2": r2}
         
+        # signature = infer_signature(X_test_only_numeric, XGB_pred_test)
+        
+        
+        # # # Store information in tracking server
+        # with mlflow.start_run(run_name = f"ts_into_features_Daily_LR_{exchange}_{execution_date}") as run:
+        #   #   mlflow.log_params(params)
+        #      mlflow.log_metrics(metrics_XGB)
+        #      mlflow.sklearn.log_model(
+        #          sk_model=XGB, input_example=X_test_only_numeric, artifact_path=artifact_path_LR,
+        #          signature = signature,
+        #          registered_model_name = f"{exchange}_Daily_Model"
+        #      )
+            
+        # print(f"Run: {model} - {exchange}")
         
         # # Store information in tracking server
         # with mlflow.start_run(run_name = f"ts_into_features_Daily_XGB_{exchange}_{execution_date}") as run:

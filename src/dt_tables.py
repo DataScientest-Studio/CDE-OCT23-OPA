@@ -197,10 +197,11 @@ def generate_dt_exchanges_table():
     connection.close()
     
     
-            
-
-if __name__ == "__main__":
+def dt_tables():
     generate_time_dimension_table()
     generate_dt_exchanges_table()
+
+if __name__ == "__main__":
+    dt_tables()
 
     

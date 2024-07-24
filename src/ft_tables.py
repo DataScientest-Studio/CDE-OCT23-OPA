@@ -300,6 +300,7 @@ def load_data(exchange):
     
 
 
+
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="Load historical data for a given exchange.")
