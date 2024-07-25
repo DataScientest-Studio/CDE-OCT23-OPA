@@ -1,12 +1,20 @@
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel
 import uvicorn
+import sys
+import os
+
+sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 #IMPORT FUNCTIONS
-from ft_tables import load_data
-from dt_tables import dt_tables
 
-from predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future
+from src.functions import database_connection
+from src.dt_tables import dt_tables
+from src.ft_tables import load_data
+from src.functions_daily import *
+
+from src.predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future
+
 
 
 api = FastAPI()
@@ -40,6 +48,7 @@ def load_exchange_data(request: ExchangeRequest):
 if __name__ == "__main__":
     uvicorn.run(api, host="0.0.0.0", port=8000)
     
+    
 
 @api.post("/recharge_dimension_tables")
 def recharge_dimension_tables():
@@ -49,6 +58,17 @@ def recharge_dimension_tables():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+    
+@api.get("/daily_data/{exchange}")
+def read_daily_data(exchange: str):
+    data = get_daily_data_json(exchange)
+    if data is None:
+        raise HTTPException(status_code=404, detail="No data found for the given exchange")
+    return data
+
+
+
+
 
 
 @api.post("/return_test_prediction_data")

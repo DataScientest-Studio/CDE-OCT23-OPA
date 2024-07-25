@@ -205,6 +205,8 @@ def predict_exchange_future(exchange: str, days: int) -> Dict[str, Any]:
 
     result = pd.concat([df_result, df_dates], axis=1)
     result['exchange'] = exchange
+    
+    result = result[['datetime', 'exchange', 'predicted_price']]
 
     # Convert the result DataFrame to JSON
     result = result.to_dict(orient='records')  # Convert DataFrame to a list of dictionaries
