@@ -15,6 +15,8 @@ from src.functions_daily import *
 
 from src.predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future
 
+from src.functions_API import get_daily_data_json, get_hourly_data_json
+
 
 
 api = FastAPI()
@@ -66,8 +68,12 @@ def read_daily_data(exchange: str):
         raise HTTPException(status_code=404, detail="No data found for the given exchange")
     return data
 
-
-
+@api.get("/hourly_data/{exchange}")
+def read_hourly_data(exchange: str):
+    data = get_hourly_data_json(exchange)
+    if data is None:
+        raise HTTPException(status_code = 404, detail = "No data found for the given exchange")
+    return data
 
 
 
