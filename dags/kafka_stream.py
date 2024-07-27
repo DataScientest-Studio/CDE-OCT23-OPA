@@ -1,7 +1,7 @@
 import json
 import datetime
+import threading
 import time
-
 from airflow import DAG
 from airflow.operators.python import PythonOperator
 from kafka import KafkaProducer
@@ -10,9 +10,11 @@ import websocket
 default_args = {
     'owner': 'opa',
     'start_date': datetime.datetime(2024, 4, 21, 19, 00),
-    'retries': 3,  # Nombre de tentatives en cas d'échec
-    'retry_delay': datetime.timedelta(seconds=30)  # Délai entre les tentatives en cas d'échec
+    'retries': 3,
+    'retry_delay': datetime.timedelta(seconds=30)
 }
+
+ping_pong_counter = 0
 
 
 def on_error(wsapp, error):
@@ -21,6 +23,17 @@ def on_error(wsapp, error):
 
 def on_open(wsapp):
     print('WebSocket connection opened')
+
+
+def on_ping(wsapp, message):
+    print("Ping received from server.")
+    wsapp.send(json.dumps({"pong": int(time.time() * 1000)}))
+
+
+def on_pong(wsapp, message):
+    global ping_pong_counter
+    ping_pong_counter = 0
+    print("Pong received, counter reset.")
 
 
 def binance_trades():
@@ -39,11 +52,13 @@ def binance_trades():
             wsapp = websocket.WebSocketApp(socket,
                                            on_open=on_open,
                                            on_message=on_message,
-                                           on_error=on_error)
-            wsapp.run_forever()
+                                           on_error=on_error,
+                                           on_ping=on_ping,
+                                           on_pong=on_pong)
+            wsapp.run_forever(ping_interval=60, ping_timeout=10)
         except Exception as e:
             print(f"WebSocket connection error: {e}")
-            time.sleep(10)  # Attendre avant de réessayer en cas d'échec
+            time.sleep(10)
 
 
 def handle_trades(json_message):
@@ -61,11 +76,9 @@ def handle_trades(json_message):
 def stream_data(trade):
     try:
         print("Creating Kafka producer...")
-        producer = KafkaProducer(bootstrap_servers=['broker:29092'],
-                                 max_block_ms=5000)
+        producer = KafkaProducer(bootstrap_servers=['broker:29092'], max_block_ms=5000)
         print("Kafka producer created successfully.")
-
-        print("Sending message to Kafka topic...")
+        print(f"Sending message to Kafka topic: {json.dumps(trade)}")
         producer.send('binance_streaming', json.dumps(trade).encode('utf-8'))
         print("Message sent successfully.")
     except Exception as e:
@@ -74,12 +87,12 @@ def stream_data(trade):
 
 with DAG('binance-streaming-automation',
          default_args=default_args,
-         schedule_interval='@daily',  # Exécuter le DAG une fois par jour
+         schedule_interval='@daily',
          catchup=False) as dag:
     streaming_task = PythonOperator(
         task_id='stream_data_from_api',
         python_callable=binance_trades,
-        retries=0  # Désactiver les tentatives de réessai car la boucle est déjà gérée
+        retries=0
     )
 
 streaming_task

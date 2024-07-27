@@ -6,7 +6,7 @@ from cassandra.policies import RoundRobinPolicy
 from cassandra.query import BatchStatement, ConsistencyLevel
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col
-from pyspark.sql.types import StructType, StructField, StringType, FloatType, IntegerType, TimestampType
+from pyspark.sql.types import StructType, StructField, StringType, FloatType, TimestampType
 
 
 def create_keyspace(session):
@@ -24,7 +24,8 @@ def create_table(session):
     try:
         session.execute("""
         CREATE TABLE IF NOT EXISTS spark_streams.BTCUSDT (
-            id bigint PRIMARY KEY,
+            id int PRIMARY KEY,
+            id_transaction TEXT,
             symbol TEXT,
             price FLOAT,
             quantity FLOAT,
@@ -36,41 +37,30 @@ def create_table(session):
 
 
 def insert_data(batch_df, epoch_id):
-    logging.info("Inserting data...")
-    # Initialisation de la connexion à Cassandra dans le try block
+    logging.info(f"Inserting data for batch {epoch_id}...")
     try:
-        # Création de la session Cassandra pour chaque batch
         cluster = Cluster(['192.168.1.35'], port=9042)
         session = cluster.connect('spark_streams')
 
-        # Préparation de la requête d'insertion
         prepared_statement = session.prepare("""
-        INSERT INTO BTCUSDT (id, symbol, price, quantity, timestamp)
-        VALUES (?, ?, ?, ?, ?)
+        INSERT INTO BTCUSDT (id, id_transaction, symbol, price, quantity, timestamp)
+        VALUES (?, ?, ?, ?, ?, ?)
         """)
-        batch = BatchStatement(consistency_level=ConsistencyLevel.ONE)
 
-        # Ajout des requêtes au batch
+        id_counter = 1
         for row in batch_df.collect():
-
             try:
-                int_id = int(row.id)
-            except ValueError:
-                logging.error(f"Invalid ID format for ID: {row.id}")
-                continue  # Passer à l'itération suivante si la conversion échoue
+                session.execute(prepared_statement,
+                                (id_counter, str(uuid.uuid4()), row.symbol, row.price, row.qty, row.time))
+                id_counter += 1
+            except Exception as e:
+                logging.error(f"Failed to insert row: {row}. Error: {e}")
 
-            batch.add(prepared_statement, (int_id, row.symbol, row.price, row.qty, row.time))
-
-        # Exécution du batch
-        session.execute(batch)
-        print(f"Batch {epoch_id} inserted successfully")
+        logging.info(f"Batch {epoch_id} inserted successfully")
     except Exception as e:
         logging.error(f"Could not insert batch {epoch_id}: {str(e)}")
-
     finally:
-        # Fermeture de la session Cassandra après l'insertion
-        if 'session' in locals():
-            session.shutdown()
+        session.shutdown()
 
 
 def create_spark_session():
@@ -79,7 +69,7 @@ def create_spark_session():
             .appName('SparkDataStreaming') \
             .config('spark.jars.packages', "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \
-            .config('spark.cassandra.connection.host', '192.168.1.35') \
+            .config('spark.cassandra.connection.host', '192.168.1.51') \
             .config('spark.cassandra.connection.port', '9042') \
             .getOrCreate()
         s_conn.sparkContext.setLogLevel("ERROR")
@@ -118,20 +108,13 @@ def kafka_connect(spark_conn):
 
 def create_cassandra_connection():
     try:
-        # Adresse IP du cluster Cassandra
         contact_point = "192.168.1.35"
-        # Création de la politique de répartition de charge RoundRobinPolicy
-        load_balancing_policy = RoundRobinPolicy()
-        # Création de la politique de répartition de charge en spécifiant le datacenter local
-        load_balancing_policy = DCAwareRoundRobinPolicy(
-            local_dc='datacenter1')  # Remplacez 'datacenter1' par votre datacenter local
-        # Connexion au cluster Cassandra avec la politique spécifiée
+        load_balancing_policy = DCAwareRoundRobinPolicy(local_dc='datacenter1')
         cluster = Cluster(
             [contact_point],
             load_balancing_policy=load_balancing_policy,
             protocol_version=5
         )
-
         cass_session = cluster.connect()
         return cass_session
     except Exception as e:
@@ -141,7 +124,6 @@ def create_cassandra_connection():
 
 def main():
     logging.basicConfig(level=logging.INFO)
-    # Initialisation de la session Spark
     spark = create_spark_session()
 
     if spark:
@@ -153,7 +135,6 @@ def main():
                 create_keyspace(session)
                 create_table(session)
 
-                # Gérer le streaming et insérer les données dans Cassandra
                 query = spark_df.writeStream.foreachBatch(insert_data).start()
                 query.awaitTermination()
 
