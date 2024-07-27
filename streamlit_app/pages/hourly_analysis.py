@@ -100,43 +100,55 @@ with st.container():
                     st.plotly_chart(fig)
             else:
                 st.write("Error occurred while fetching data.")
-                st.write("Would you like to load the data?")
-                if st.button("Load Data"):
-                    if load_data(exchange):
-                        st.write("Data loaded. Please try fetching the data again.")
-                    else:
-                        st.error("Failed to load data.")
+                
+### LOAD DATA                   
+st.write("Would you like to load or update the data ?")
+if st.button("Load / Update the Data"):
+    if load_data(exchange):
+        st.write("Data loaded. Please try fetching the data again.")
+    else:
+        st.error("Failed to load data.")
 
+
+### EXTRACT DATA
 
 st.header("Extract data")
 data = fetch_data(exchange)
-df = pd.read_json(data)
 
-st.write('Here is the DataFrame:')
-st.dataframe(df)  
+if data is None:
+    st.write("No data available. Please load the data.")
+elif isinstance(data, list) and len(data) == 0:
+    st.write("You need to load data")
+else:
+    try:
+        df = pd.read_json(data)
 
-num_rows = len(df)
-st.write(f'The DataFrame has {num_rows} rows.')
+        st.write('Here is the DataFrame:')
+        st.dataframe(df)
 
-# Extract the last 1000 rows
-df_last_1000 = df.tail(1000)
+        num_rows = len(df)
+        st.write(f'The DataFrame has {num_rows} rows.')
 
+        # Extract the last 1000 rows
+        df_last_1000 = df.tail(1000)
 
-# Function to download the DataFrame as an Excel file
-def download_excel(dataframe):
-    # Create a BytesIO buffer
-    buffer = io.BytesIO()
-    # Write the DataFrame to the buffer in Excel format using openpyxl
-    with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
-        dataframe.to_excel(writer, index=False, sheet_name='Last_1000_Rows')
-    buffer.seek(0)
-    return buffer
+        # Function to download the DataFrame as an Excel file
+        def download_excel(dataframe):
+            # Create a BytesIO buffer
+            buffer = io.BytesIO()
+            # Write the DataFrame to the buffer in Excel format using openpyxl
+            with pd.ExcelWriter(buffer, engine='openpyxl') as writer:
+                dataframe.to_excel(writer, index=False, sheet_name='Last_1000_Rows')
+            buffer.seek(0)
+            return buffer
 
-if st.button('Download Last 1000 Rows as Excel'):
-    buffer = download_excel(df_last_1000)
-    st.download_button(
-        label='Download Excel file',
-        data=buffer,
-        file_name='last_1000_rows.xlsx',
-        mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-    )
+        if st.button('Download Last 1000 Rows as Excel'):
+            buffer = download_excel(df_last_1000)
+            st.download_button(
+                label='Download Excel file',
+                data=buffer,
+                file_name='last_1000_rows.xlsx',
+                mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+            )
+    except ValueError as e:
+        st.write(f"An error occurred while processing the data: {e}")
