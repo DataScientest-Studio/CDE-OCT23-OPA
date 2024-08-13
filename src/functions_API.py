@@ -2,6 +2,7 @@
 import pandas as pd
 
 from functions import database_connection
+from functions_daily import get_daily_data, transform_ts_data_into_features_and_target
 
 def get_daily_data_json(exchange):
     connection = database_connection()
@@ -49,3 +50,29 @@ def get_fear_data():
         return None
     else:
         return df_original.to_json(orient = 'records')
+    
+    
+def ts_into_features_daily(exchange):
+    temporality = 'daily'
+
+    df_original = get_daily_data(exchange)
+
+    df = df_original[['id_date', 'Open','Exchange']]
+    df['datetime'] = pd.to_datetime(df['id_date'], format='%Y%m%d')
+    df = df[['datetime', 'Open', 'Exchange']]
+            
+    features, targets = transform_ts_data_into_features_and_target(
+        df,
+        input_seq_len=31, # one week of history -> 24*7*1
+        step_size=1,
+    )
+
+    df = pd.concat([features, targets],
+            axis = 1)
+    
+    if df.empty:
+        print("There is no data")
+        return None
+    
+    else:
+        return df.to_json(orient = 'records')

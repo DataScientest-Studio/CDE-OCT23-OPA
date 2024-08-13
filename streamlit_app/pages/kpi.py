@@ -46,7 +46,7 @@ def fetch_fear_data():
 current_year = datetime.now().year
 current_month = datetime.now().month
 
-st.title("KPI")
+st.title("KPI's")
 
 # Create a container for filter controls and the button
 with st.container():

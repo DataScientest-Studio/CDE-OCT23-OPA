@@ -15,7 +15,7 @@ from src.functions_daily import *
 
 from src.predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future
 
-from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data
+from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily
 
 
 
@@ -82,10 +82,16 @@ def read_fear_data():
         raise HTTPException(status_code = 404, detail = "No fear data found")
     return data
 
-
+@api.get("/ts_features_table/{exchange}")
+def time_series_features_table(exchange: str):
+    data = ts_into_features_daily(exchange)
+    if data is None:
+        raise HTTPException(status_code = 404, detail = "Not possible to get the time series data transformed to features")
+    return data
+    
 
 @api.post("/return_test_prediction_data")
-def api_return_test_prediction_data(request: PredictionRequest):
+def api_return_test_prediction_data(request: ExchangeRequest):
     exchange = request.exchange
     try:
         result = return_test_prediction_data(exchange)

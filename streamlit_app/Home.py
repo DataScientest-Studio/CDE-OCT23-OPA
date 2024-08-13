@@ -1,11 +1,54 @@
 import streamlit as st
 
+#st.logo()
+
 
 # ---- PAGE SETUP ------
+
+## DASHBOARD
+
+daily_analysis = st.Page(
+    page = 'pages/daily_analysis.py',
+    title = "Daily Analysis",
+    icon = ":material/today:"
+)
+
+hourly_analysis = st.Page(
+    page = "pages/hourly_analysis.py",
+    title = "Hourly Analysis",
+    icon = ":material/schedule:"
+    )
+
+
+kpi = st.Page(
+    page = "pages/kpi.py",
+    title = "KPI",
+    icon = ":material/candlestick_chart:"
+    )
+
+## STREAMING
+
+streaming = st.Page(
+    page = "pages/streaming.py",
+    title = "Streaming",
+    icon = ":material/timeline:"
+    )
+
+## MACHINE LEARNING
+
+ml = st.Page(
+    page = "pages/ml.py",
+    title = "Data modeling",
+    icon = ":material/query_stats:"
+    )
+
+
+## PROJECT EXPLANATION
+
 project_explanation = st.Page(
     page = "pages/project_explanation.py",
     title = "Project",
-    icon= ":material/account_circle:",
+    icon= ":material/home:",
     default = True
 )
 
@@ -15,37 +58,14 @@ about_us = st.Page(
     icon = ":material/account_circle:"
     )
 
-daily_analysis = st.Page(
-    page = 'pages/daily_analysis.py',
-    title = "Daily Analysis",
-    icon = ":material/bar_chart:"
-)
-
-hourly_analysis = st.Page(
-    page = "pages/hourly_analysis.py",
-    title = "Hourly Analysis",
-    icon = ":material/bar_chart:"
-    )
-
-
-kpi = st.Page(
-    page = "pages/kpi.py",
-    title = "KPI",
-    icon = ":material/bar_chart:"
-    )
-
-streaming = st.Page(
-    page = "pages/streaming.py",
-    title = "Streaming",
-    icon = ":material/bar_chart:"
-    )
 
 # ---- NAVIGATION SETUP
 pg = st.navigation(
     {
-        "Info": [project_explanation, about_us],
-        "Analysis": [daily_analysis, hourly_analysis, kpi],
-        "Streaming": [streaming]
+        "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
+        "STREAMING": [streaming],
+        "MACHINE LEARNING": [ml],
+        "PROJECT INFORMATION": [project_explanation, about_us]
             
     }
 )
