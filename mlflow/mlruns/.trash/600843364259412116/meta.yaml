@@ -1,0 +1,7 @@
+artifact_location: mlflow-artifacts:/600843364259412116
+creation_time: 1721578717337
+experiment_id: '600843364259412116'
+last_update_time: 1723648422271
+lifecycle_stage: active
+name: ts_into_features_Daily_LR_BTC-EUR
+tags: {}

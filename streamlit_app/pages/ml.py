@@ -72,7 +72,7 @@ else:
         df_head = df_head.reset_index(drop=True)
 
         #st.write('Here is the DataFrame:')
-        st.table(df_head)
+        st.dataframe(df_head)
 
         #num_rows = len(df)
         #st.write(f'The DataFrame has {num_rows} rows.')
@@ -104,7 +104,7 @@ else:
         df_features_data_head = df_features_data_head.reset_index(drop=True)
         derised_columns = ['exchange','target_open_next_day', 'datetime', 'open_previous_1_day', 'open_previous_2_day', 'open_previous_3_day', 'open_previous_4_day', 'open_previous_5_day', 'open_previous_6_day', 'open_previous_7_day']
         df_features_data_head = df_features_data_head[derised_columns]
-        st.table(df_features_data_head)
+        st.dataframe(df_features_data_head)
         #st.write('Here is the DataFrame:')
 
     except ValueError as e:

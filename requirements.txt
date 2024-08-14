@@ -12,5 +12,5 @@ lightgbm
 streamlit
 plotly
 statsmodels
-
+graphviz
 

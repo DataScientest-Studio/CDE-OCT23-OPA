@@ -39,9 +39,14 @@ streaming = st.Page(
 ml = st.Page(
     page = "pages/ml.py",
     title = "Data modeling",
-    icon = ":material/query_stats:"
+    icon = ":material/schema:"
     )
 
+ml_model = st.Page(
+    page = "pages/ml_model.py",
+    title = "ML Model",
+    icon = ":material/query_stats:"
+)
 
 ## PROJECT EXPLANATION
 
@@ -64,7 +69,7 @@ pg = st.navigation(
     {
         "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
         "STREAMING": [streaming],
-        "MACHINE LEARNING": [ml],
+        "MACHINE LEARNING": [ml, ml_model],
         "PROJECT INFORMATION": [project_explanation, about_us]
             
     }

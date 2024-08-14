@@ -124,7 +124,7 @@ else:
         df = pd.read_json(data)
 
         st.write('Here is the DataFrame:')
-        st.dataframe(df)
+        st.table(df.head(10))
 
         num_rows = len(df)
         st.write(f'The DataFrame has {num_rows} rows.')
