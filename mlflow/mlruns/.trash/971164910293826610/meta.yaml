@@ -1,7 +1,0 @@
-artifact_location: mlflow-artifacts:/971164910293826610
-creation_time: 1721580646887
-experiment_id: '971164910293826610'
-last_update_time: 1723648406417
-lifecycle_stage: active
-name: ts_into_features_Daily_BNB-EUR
-tags: {}

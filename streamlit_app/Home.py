@@ -48,6 +48,13 @@ ml_model = st.Page(
     icon = ":material/query_stats:"
 )
 
+mlflow = st.Page(
+    page = "pages/mlflow.py",
+    title = "mlflow",
+    
+    icon = ":material/arrow_circle_right:"
+)
+
 ## PROJECT EXPLANATION
 
 project_explanation = st.Page(
@@ -69,7 +76,7 @@ pg = st.navigation(
     {
         "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
         "STREAMING": [streaming],
-        "MACHINE LEARNING": [ml, ml_model],
+        "MACHINE LEARNING": [ml, ml_model, mlflow],
         "PROJECT INFORMATION": [project_explanation, about_us]
             
     }

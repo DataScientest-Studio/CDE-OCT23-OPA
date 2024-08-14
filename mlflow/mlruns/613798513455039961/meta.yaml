@@ -1,6 +1,0 @@
-artifact_location: mlflow-artifacts:/613798513455039961
-creation_time: 1721553746496
-experiment_id: '613798513455039961'
-last_update_time: 1721553746496
-lifecycle_stage: active
-name: ts_into_features_Daily_LGB_^GSPC

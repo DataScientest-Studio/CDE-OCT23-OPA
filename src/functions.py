@@ -32,3 +32,27 @@ def charge_model(exchange):
         
     except Exception as e:
         print(f"Error loading model: {e}")
+        return None
+    
+    
+
+
+def list_registered_models():
+    mlflow.set_tracking_uri("http://localhost:5000")  # Set your MLflow tracking URI
+    client = mlflow.tracking.MlflowClient()  # Create an MLflow client
+
+    # Get all registered models
+    registered_models = client.list_registered_models()
+    
+    # Extract model names and versions
+    models_info = []
+    for model in registered_models:
+        models_info.append({
+            "name": model.name,
+            "creation_timestamp": model.creation_timestamp,
+            "last_updated_timestamp": model.last_updated_timestamp,
+            "description": model.description
+        })
+    
+    return models_info
+

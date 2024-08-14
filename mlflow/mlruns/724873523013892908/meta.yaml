@@ -1,6 +1,0 @@
-artifact_location: mlflow-artifacts:/724873523013892908
-creation_time: 1721553823300
-experiment_id: '724873523013892908'
-last_update_time: 1721553823300
-lifecycle_stage: active
-name: ts_into_features_Hourly_LR_BTC-USD

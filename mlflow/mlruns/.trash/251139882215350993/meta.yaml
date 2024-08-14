@@ -1,7 +1,0 @@
-artifact_location: mlflow-artifacts:/251139882215350993
-creation_time: 1721675241878
-experiment_id: '251139882215350993'
-last_update_time: 1723648401325
-lifecycle_stage: active
-name: ts_into_features_Daily_BTC-USD
-tags: {}

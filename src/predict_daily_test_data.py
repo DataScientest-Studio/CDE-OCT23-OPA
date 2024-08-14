@@ -26,6 +26,42 @@ from ft_tables import load_data
 from functions import charge_model
 from train_tsif_model_daily import mlflow_daily, mlflow_daily_register
 
+def register_daily_model(exchange):
+    model = None
+
+    # IS THERE ANY MODEL? 
+    try:
+        model = charge_model(exchange)
+    
+    except Exception as e:
+        print(f"{e}")
+        return None
+    
+    # NO MODEL
+    if model is None:
+        
+        print("There is no model")
+        
+        df_original = get_daily_data(exchange)
+        #print(df_original)
+        
+        # NO DATA
+        #if df_original == None:
+        if df_original is None or len(df_original) < 1:
+            
+            #Load the data:
+            load_data(exchange)
+            print("Data loaded")
+            
+            #Train and register the model:
+            mlflow_daily_register(exchange)
+            return "Model registered"
+        
+        # DATA 
+        else:
+            #Train and register the model:
+            mlflow_daily_register(exchange)
+            
 
 def predict_test_data(exchange):
     
@@ -50,7 +86,7 @@ def predict_test_data(exchange):
         
         # NO DATA
         #if df_original == None:
-        if len(df_original) < 1:
+        if df_original is None or len(df_original) < 1:
             
             #Load the data:
             load_data(exchange)
@@ -92,7 +128,7 @@ def predict_test_data(exchange):
         df_original = get_daily_data(exchange)
         
         # NO DATA
-        if len(df_original) < 1:
+        if df_original is None or len(df_original) < 1:
             
             # Load the data:
             load_data(exchange)

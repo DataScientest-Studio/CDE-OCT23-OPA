@@ -1,0 +1,15 @@
+artifact_uri: mlflow-artifacts:/918832660778778484/c51f94e89a8a4eedae1ae3d9ea4cbaaf/artifacts
+end_time: 1723655830856
+entry_point_name: ''
+experiment_id: '918832660778778484'
+lifecycle_stage: active
+run_id: c51f94e89a8a4eedae1ae3d9ea4cbaaf
+run_name: ts_into_features_Daily_LR_ETH-USD_2024-08-14
+run_uuid: c51f94e89a8a4eedae1ae3d9ea4cbaaf
+source_name: ''
+source_type: 4
+source_version: ''
+start_time: 1723655763151
+status: 3
+tags: []
+user_id: ubuntu

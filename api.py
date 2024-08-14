@@ -8,12 +8,13 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 #IMPORT FUNCTIONS
 
-from src.functions import database_connection
+from src.functions import database_connection, charge_model
 from src.dt_tables import dt_tables
 from src.ft_tables import load_data
 from src.functions_daily import *
 
-from src.predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future
+
+from src.predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future, register_daily_model
 
 from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily
 
@@ -36,7 +37,7 @@ class PredictionRequest(BaseModel):
     days: int = None  # Optional parameter for predict_exchange_future
 
 
-# FONCTIONS
+# API FUNCTIONS
 
 @api.post("/load_exchange_data")
 def load_exchange_data(request: ExchangeRequest):
@@ -89,6 +90,26 @@ def time_series_features_table(exchange: str):
         raise HTTPException(status_code = 404, detail = "Not possible to get the time series data transformed to features")
     return data
     
+
+# MACHINE LEARNING
+
+@api.get("/get_model/{exchange}")
+def get_model(exchange:str):
+    model = charge_model(exchange)
+    if model is None:
+        raise HTTPException(status_code = 404, detail = "There is no model")
+    return "There is actually a model"
+
+@api.post("/register_model/{exchange}")
+def register_d_model(exchange:str):
+    try: 
+        register_daily_model(exchange)
+        return {"status": "success", "message": f"Model registered. You can see it on mlflow UI"}
+    except Exception as e:
+        raise HTTPException(status_code=500, detail=str(e))
+
+
+# PREDICTIONS
 
 @api.post("/return_test_prediction_data")
 def api_return_test_prediction_data(request: ExchangeRequest):

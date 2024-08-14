@@ -1,7 +1,0 @@
-artifact_location: mlflow-artifacts:/901358408376822976
-creation_time: 1721554265698
-experiment_id: '901358408376822976'
-last_update_time: 1723648274088
-lifecycle_stage: active
-name: ts_into_features_Hourly_XGB_^GSPC
-tags: {}

@@ -13,4 +13,4 @@ streamlit
 plotly
 statsmodels
 graphviz
-
+networkx
