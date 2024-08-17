@@ -22,8 +22,9 @@ import argparse
 import os
 from dateutil.relativedelta import relativedelta
 
-from functions_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_daily_data
 
+from functions_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_daily_data
+from ft_tables import load_data, load_daily_data
 
 def mlflow_daily(exchange):
     
@@ -69,6 +70,9 @@ def mlflow_daily(exchange):
             mlflow.sklearn.log_model(
                 sk_model=LR, input_example=X_test_only_numeric, artifact_path=artifact_path_LR
             )
+            mlflow.set_tag("model_type", "Linear Regression")
+            mlflow.set_tag("exchange", exchange)
+            mlflow.set_tag("execution_date", execution_date)
             
         print(f"Run: {model} - {exchange}")
             
@@ -135,6 +139,8 @@ def mlflow_daily(exchange):
         
         
 def mlflow_daily_register(exchange):
+    #Recharge the data of the exchange and retrain the model
+    load_daily_data(exchange)
     
     df_original = get_daily_data(exchange)
     
@@ -182,6 +188,9 @@ def mlflow_daily_register(exchange):
                 signature = signature,
                 registered_model_name = f"{exchange}_Daily_Model"
             )
+            mlflow.set_tag("model_type", "Linear Regression")
+            mlflow.set_tag("exchange", exchange)
+            mlflow.set_tag("execution_date", execution_date)
             
         print(f"Run: {model} - {exchange}")
             

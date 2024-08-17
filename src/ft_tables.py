@@ -48,6 +48,38 @@ def extract_data(exchange, days):
     
     return daily_data, hour_data, fear_data
 
+def extract_daily_data(exchange):
+    get_date = datetime.now()
+    get_date_formated = get_date.strftime("%Y-%m-%d")
+    get_date_730_days_ago = get_date - timedelta(days=729)
+    get_date_730_days_ago_formated = get_date_730_days_ago.strftime("%Y-%m-%d")
+    
+    daily_data = yf.download(exchange
+                    ,start = "2012-01-01"
+                    ,end = get_date_formated)    
+    
+    return daily_data
+
+def extract_hourly_data(exchange):
+    get_date = datetime.now()
+    get_date_formated = get_date.strftime("%Y-%m-%d")
+    get_date_730_days_ago = get_date - timedelta(days=729)
+    get_date_730_days_ago_formated = get_date_730_days_ago.strftime("%Y-%m-%d")
+    
+    hour_data = yf.download(exchange
+                    ,start = get_date_730_days_ago_formated
+                    ,end = get_date_formated
+                    ,interval = "1h")
+    
+    return hourly_data
+    
+def extract_fear_data(days):
+    r = requests.get(f'https://api.alternative.me/fng/?limit={days}')
+    fear_data = pd.DataFrame(r.json()['data'])
+    
+    return fear_data
+    
+    
 
 def transform_daily(dataframe, exchange):
     # Add the exchange column
@@ -148,7 +180,7 @@ def get_id_exchange(exchange):
 
 
 
-def load_daily_data(dataframe):
+def load_daily_data_to_MYSQL(dataframe):
     connection = database_connection()
 
     cursor = connection.cursor()
@@ -190,7 +222,7 @@ def load_daily_data(dataframe):
     
     
     
-def load_hour_data(dataframe):
+def load_hour_data_to_MYSQL(dataframe):
     connection = database_connection()
 
     cursor = connection.cursor()
@@ -231,7 +263,7 @@ def load_hour_data(dataframe):
     connection.close()
     
     
-def load_fear_data(dataframe):
+def load_fear_data_to_MYSQL(dataframe):
     connection = database_connection()
     cursor = connection.cursor()
     
@@ -292,13 +324,43 @@ def load_data(exchange):
                         on = 'exchange', how = 'left')
     
     # LOAD DATA
-    load_daily_data(daily_data)
+    load_daily_data_to_MYSQL(daily_data)
 
-    load_hour_data(hour_data)
+    load_hour_data_to_MYSQL(hour_data)
     
-    load_fear_data(fear_data)
+    load_fear_data_to_MYSQL(fear_data)
     
+    
+def load_daily_data(exchange):
+    daily_data = extract_daily_data(exchange)
+    daily_data = transform_daily(daily_data, exchange)
+    
+    # DATA INTEGRITY
+    
+    df_dt_exchanges = get_id_exchange(exchange)
 
+    daily_data = pd.merge(daily_data, df_dt_exchanges,
+                        on='exchange', how='left')
+    # LOAD DATA
+    load_daily_data_to_MYSQL(daily_data)
+
+def load_houly_data(exchange):
+    hourly_data = extract_hourly_data(exchange)
+    hourly_data = transform_hour(hour_data, exchange)
+    
+    # DATA INTEGRITY
+    
+    df_dt_exchanges = get_id_exchange(exchange)
+
+    hour_data = pd.merge(hour_data, df_dt_exchanges,
+                        on = 'exchange', how = 'left')
+    load_hour_data_to_MYSQL(hour_data)
+    
+def load_fear_data(days):
+    fear_data = extract_fear_data(days)
+    fear_data = transform_fear(fear_data)
+    load_fear_data_to_MYSQL(fear_data)
+    
 
 
     

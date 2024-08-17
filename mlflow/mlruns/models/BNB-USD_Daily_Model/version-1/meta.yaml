@@ -1,0 +1,12 @@
+creation_timestamp: 1723885324349
+current_stage: None
+description: ''
+last_updated_timestamp: 1723885324349
+name: BNB-USD_Daily_Model
+run_id: 5cc36aa0633b4481aa4b8e6d30c0fb8b
+run_link: ''
+source: mlflow-artifacts:/194958696826654161/5cc36aa0633b4481aa4b8e6d30c0fb8b/artifacts/ts_into_features_Daily_LR_BNB-USD
+status: READY
+status_message: null
+user_id: null
+version: 1

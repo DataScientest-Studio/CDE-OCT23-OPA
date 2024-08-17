@@ -44,7 +44,13 @@ ml = st.Page(
 
 ml_model = st.Page(
     page = "pages/ml_model.py",
-    title = "ML Model",
+    title = "ML Models",
+    icon = ":material/query_stats:"
+)
+
+ml_model_metrics = st.Page(
+    page = "pages/ml_model_metrics.py",
+    title = "ML Model Metrics",
     icon = ":material/query_stats:"
 )
 
@@ -76,7 +82,7 @@ pg = st.navigation(
     {
         "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
         "STREAMING": [streaming],
-        "MACHINE LEARNING": [ml, ml_model, mlflow],
+        "MACHINE LEARNING": [ml, ml_model, ml_model_metrics, mlflow],
         "PROJECT INFORMATION": [project_explanation, about_us]
             
     }

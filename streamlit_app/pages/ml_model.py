@@ -6,7 +6,7 @@ import time  # Import time to simulate loading
 # API endpoints
 FASTAPI_URL = "http://127.0.0.1:8000"
 CHARGE_MODEL = f"{FASTAPI_URL}/get_model"
-REGISTER_MODEL = f"{FASTAPI_URL}/register_model"
+REGISTER_NEW_MODEL = f"{FASTAPI_URL}/register_new_model"
 
 # Function to fetch model from FastAPI
 def get_model(exchange):
@@ -19,8 +19,8 @@ def get_model(exchange):
         return None
 
 # Function to register model using POST request
-def register_model(exchange):
-    url = f"{REGISTER_MODEL}/{exchange}"
+def register_new_model(exchange):
+    url = f"{REGISTER_NEW_MODEL}/{exchange}"
     response = requests.post(url)
     if response.status_code == 200:
         return response.json()
@@ -29,7 +29,10 @@ def register_model(exchange):
         return None
 
 # Title of the Streamlit app
-st.title("ML: Model")
+st.title("ML: Models")
+st.subheader("Ask if there is a model for your exchange")
+st.write("If any model has been detected for your exchange a new one will be trained and registered")
+
 
 
 # Create a Graphviz graph object with horizontal layout
@@ -65,17 +68,18 @@ if st.button("Get Model"):
             st.write("Model is available.")
             st.markdown(
                 f"""
-                <iframe src="http://localhost:5000/#/models" width="100%" height="800px"></iframe>
+                <iframe src="http://63.33.140.99:5000/#/models" width="100%" height="800px"></iframe>
                 """,
                 unsafe_allow_html=True
             )
+                    
         else:
             st.write("No model found for this exchange.")
             st.write("The model will be trained and registered for this exchange")
 
             # Show loading spinner while the model is being registered
             with st.spinner("Training and registering the model..."):
-                registration_response = register_model(exchange)
+                registration_response = register_new_model(exchange)
                 time.sleep(2)  # Simulate a delay for demonstration (remove in production)
                 st.write("Attempting to register the model...")  # Debugging statement
                 if registration_response:
@@ -90,3 +94,30 @@ if st.button("Get Model"):
                     st.error("Model registration failed.")
     else:
         st.error("Exchange symbol is required to register a model.")
+        
+
+st.subheader("Do you want to train a new model?", divider=True)
+st.write("See before the metrics of the existing models:")
+st.page_link("pages/ml_model_metrics.py", label="Models metrics", icon=":material/query_stats:")
+
+if st.button("Train new model"):
+    if exchange:
+
+        # Show loading spinner while the model is being registered
+        with st.spinner("Training and registering the model..."):
+            registration_response = register_new_model(exchange)
+            time.sleep(2)  # Simulate a delay for demonstration (remove in production)
+            st.write("Attempting to register the model...")  # Debugging statement
+            if registration_response:
+                st.write("Model has been successfully registered.")
+                st.markdown(
+                    f"""
+                    <iframe src="http://localhost:5000/#/models" width="100%" height="800px"></iframe>
+                    """,
+                    unsafe_allow_html=True
+                )
+            else:
+                st.error("Model registration failed.")
+    else:
+        st.error("Exchange symbol is required to register a new model.")
+        
