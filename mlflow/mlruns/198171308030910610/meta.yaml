@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/198171308030910610
+creation_time: 1723924865863
+experiment_id: '198171308030910610'
+last_update_time: 1723924865863
+lifecycle_stage: active
+name: Daily_^GSPC_XGBoost

@@ -1,0 +1,12 @@
+creation_timestamp: 1723925337295
+current_stage: None
+description: ''
+last_updated_timestamp: 1723925337295
+name: ETH-USD_Daily_Model_RandomForestRegressor
+run_id: fa5e3a6081e54fb6a5ab155566d2c770
+run_link: ''
+source: mlflow-artifacts:/290275211113319777/fa5e3a6081e54fb6a5ab155566d2c770/artifacts/Daily_ETH-USD_RandomForestRegressor
+status: READY
+status_message: null
+user_id: null
+version: 1

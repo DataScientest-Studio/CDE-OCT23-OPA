@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/249947113104235712
+creation_time: 1723924185799
+experiment_id: '249947113104235712'
+last_update_time: 1723924185799
+lifecycle_stage: active
+name: Daily_BTC-USD_XGBoost

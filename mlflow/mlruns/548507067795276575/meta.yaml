@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/548507067795276575
+creation_time: 1723924785853
+experiment_id: '548507067795276575'
+last_update_time: 1723924785853
+lifecycle_stage: active
+name: Daily_^GSPC_LinearRegression

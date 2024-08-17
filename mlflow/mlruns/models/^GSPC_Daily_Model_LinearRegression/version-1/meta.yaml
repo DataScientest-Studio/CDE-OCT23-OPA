@@ -1,0 +1,12 @@
+creation_timestamp: 1723924851581
+current_stage: None
+description: ''
+last_updated_timestamp: 1723924851581
+name: ^GSPC_Daily_Model_LinearRegression
+run_id: 281d7de2fd2b41619fa0c36d60faafd9
+run_link: ''
+source: mlflow-artifacts:/548507067795276575/281d7de2fd2b41619fa0c36d60faafd9/artifacts/Daily_^GSPC_LinearRegression
+status: READY
+status_message: null
+user_id: null
+version: 1

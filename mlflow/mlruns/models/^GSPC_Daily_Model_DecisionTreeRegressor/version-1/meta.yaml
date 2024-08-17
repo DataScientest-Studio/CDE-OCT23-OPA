@@ -1,0 +1,12 @@
+creation_timestamp: 1723925103980
+current_stage: None
+description: ''
+last_updated_timestamp: 1723925103980
+name: ^GSPC_Daily_Model_DecisionTreeRegressor
+run_id: 5a0caed0ec814fee9369281df6f5ce34
+run_link: ''
+source: mlflow-artifacts:/748261920856232966/5a0caed0ec814fee9369281df6f5ce34/artifacts/Daily_^GSPC_DecisionTreeRegressor
+status: READY
+status_message: null
+user_id: null
+version: 1

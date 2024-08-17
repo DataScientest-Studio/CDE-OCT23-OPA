@@ -1,0 +1,12 @@
+creation_timestamp: 1723918480940
+current_stage: None
+description: ''
+last_updated_timestamp: 1723918480940
+name: BTC-USD_Daily_Model_RandomForestRegressor
+run_id: 5d8ffed261cc47168b7927ed10d291fa
+run_link: ''
+source: mlflow-artifacts:/426571527753831453/5d8ffed261cc47168b7927ed10d291fa/artifacts/Daily_BTC-USD_RandomForestRegressor
+status: READY
+status_message: null
+user_id: null
+version: 2

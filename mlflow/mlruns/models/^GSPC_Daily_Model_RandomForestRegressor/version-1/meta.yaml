@@ -1,0 +1,12 @@
+creation_timestamp: 1723925016558
+current_stage: None
+description: ''
+last_updated_timestamp: 1723925016558
+name: ^GSPC_Daily_Model_RandomForestRegressor
+run_id: 7fd7ef42ddbf4f01aa72154eebede7fb
+run_link: ''
+source: mlflow-artifacts:/153573587890857480/7fd7ef42ddbf4f01aa72154eebede7fb/artifacts/Daily_^GSPC_RandomForestRegressor
+status: READY
+status_message: null
+user_id: null
+version: 1

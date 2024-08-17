@@ -1,0 +1,12 @@
+creation_timestamp: 1723918955430
+current_stage: None
+description: ''
+last_updated_timestamp: 1723918955430
+name: ETH-USD_Daily_Model_DecisionTreeRegressor
+run_id: 853b87f0ca414c7199518cb668c82254
+run_link: ''
+source: mlflow-artifacts:/645015625844324424/853b87f0ca414c7199518cb668c82254/artifacts/Daily_ETH-USD_DecisionTreeRegressor
+status: READY
+status_message: null
+user_id: null
+version: 1

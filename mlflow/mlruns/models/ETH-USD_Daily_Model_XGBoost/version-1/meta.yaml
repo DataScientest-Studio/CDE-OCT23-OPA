@@ -1,0 +1,12 @@
+creation_timestamp: 1723925236161
+current_stage: None
+description: ''
+last_updated_timestamp: 1723925236161
+name: ETH-USD_Daily_Model_XGBoost
+run_id: 0e636cb1220342918a40d15f135101b9
+run_link: ''
+source: mlflow-artifacts:/539139418507697983/0e636cb1220342918a40d15f135101b9/artifacts/Daily_ETH-USD_XGBoost
+status: READY
+status_message: null
+user_id: null
+version: 1

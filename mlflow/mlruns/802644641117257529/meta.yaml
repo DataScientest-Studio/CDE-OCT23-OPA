@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/802644641117257529
+creation_time: 1723923010120
+experiment_id: '802644641117257529'
+last_update_time: 1723923010120
+lifecycle_stage: active
+name: Daily_BTC-USD_LinearRegression

@@ -51,14 +51,14 @@ ml_model = st.Page(
 ml_model_metrics = st.Page(
     page = "pages/ml_model_metrics.py",
     title = "ML Model Metrics",
-    icon = ":material/query_stats:"
+    icon = ":material/analytics:"
 )
 
 mlflow = st.Page(
     page = "pages/mlflow.py",
     title = "mlflow",
     
-    icon = ":material/arrow_circle_right:"
+    icon = ":material/waterfall_chart:"
 )
 
 ## PROJECT EXPLANATION

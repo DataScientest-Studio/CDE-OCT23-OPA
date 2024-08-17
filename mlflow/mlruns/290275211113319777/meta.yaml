@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/290275211113319777
+creation_time: 1723925263301
+experiment_id: '290275211113319777'
+last_update_time: 1723925263301
+lifecycle_stage: active
+name: Daily_ETH-USD_RandomForestRegressor

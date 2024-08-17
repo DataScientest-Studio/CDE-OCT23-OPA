@@ -8,7 +8,7 @@ sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
 #IMPORT FUNCTIONS
 
-from src.functions import database_connection, charge_model
+from src.functions import database_connection, charge_model, experiments_metrics
 from src.dt_tables import dt_tables
 from src.ft_tables import load_data
 from src.functions_daily import *
@@ -18,6 +18,7 @@ from src.predict_daily_test_data import  predict_test_data, return_test_predicti
 from src.train_tsif_model_daily import mlflow_daily_register
 
 from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily
+
 
 
 
@@ -94,18 +95,26 @@ def time_series_features_table(exchange: str):
 
 # MACHINE LEARNING
 
-@api.get("/get_model/{exchange}")
-def get_model(exchange:str):
-    model = charge_model(exchange)
+@api.get("/get_model/{exchange}&{model}")
+def get_model(exchange:str, model: str):
+    model = charge_model(exchange, model)
     if model is None:
         raise HTTPException(status_code = 404, detail = "There is no model")
     return "There is actually a model"
 
+@api.get("/metrics")
+def get_metrics():
+    metrics = experiments_metrics()
+    if metrics is None:
+        raise HTTPException(status_code = 404, detail = "Impossible to get the metrics")
+    return metrics
+    
+
 #Loads the last data of yfinance and train the new model
-@api.post("/register_new_model/{exchange}")
-def register_d_model(exchange:str):
+@api.post("/register_new_model/{exchange}&{model}")
+def register_d_model(exchange:str, model:str):
     try: 
-        mlflow_daily_register(exchange)
+        mlflow_daily_register(exchange, model)
         return {"status": "success", "message": f"Model registered. You can see it on mlflow UI"}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))

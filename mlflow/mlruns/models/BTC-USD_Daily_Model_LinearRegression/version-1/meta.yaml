@@ -1,0 +1,12 @@
+creation_timestamp: 1723916417817
+current_stage: None
+description: ''
+last_updated_timestamp: 1723916417817
+name: BTC-USD_Daily_Model_LinearRegression
+run_id: de1c9b7a22b24705befa2673e137692c
+run_link: ''
+source: mlflow-artifacts:/927957027627717416/de1c9b7a22b24705befa2673e137692c/artifacts/Daily_BTC-USD_LinearRegression
+status: READY
+status_message: null
+user_id: null
+version: 1

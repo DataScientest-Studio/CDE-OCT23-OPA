@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/153573587890857480
+creation_time: 1723924941573
+experiment_id: '153573587890857480'
+last_update_time: 1723924941573
+lifecycle_stage: active
+name: Daily_^GSPC_RandomForestRegressor

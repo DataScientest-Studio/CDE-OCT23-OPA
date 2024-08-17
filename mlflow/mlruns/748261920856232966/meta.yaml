@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/748261920856232966
+creation_time: 1723925038913
+experiment_id: '748261920856232966'
+last_update_time: 1723925038913
+lifecycle_stage: active
+name: Daily_^GSPC_DecisionTreeRegressor

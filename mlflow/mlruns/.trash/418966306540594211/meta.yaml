@@ -1,0 +1,7 @@
+artifact_location: mlflow-artifacts:/418966306540594211
+creation_time: 1723918313005
+experiment_id: '418966306540594211'
+last_update_time: 1723918654796
+lifecycle_stage: active
+name: Daily_BTC-USD_DecisionTreeRegressor
+tags: {}

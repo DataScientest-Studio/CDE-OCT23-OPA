@@ -39,7 +39,8 @@ def time_series_features_data(exchange):
         return None
 
 # Streamlit UI
-st.title("Data Modeling")
+st.title("Data Modeling:")
+st.subheader("_We transform time series data into features_")
 
 
 

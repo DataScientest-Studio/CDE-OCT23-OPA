@@ -1,0 +1,12 @@
+creation_timestamp: 1723918377532
+current_stage: None
+description: ''
+last_updated_timestamp: 1723918377532
+name: BTC-USD_Daily_Model_DecisionTreeRegressor
+run_id: ed8e52395c324ac49ff86ef66331a529
+run_link: ''
+source: mlflow-artifacts:/418966306540594211/ed8e52395c324ac49ff86ef66331a529/artifacts/Daily_BTC-USD_DecisionTreeRegressor
+status: READY
+status_message: null
+user_id: null
+version: 1

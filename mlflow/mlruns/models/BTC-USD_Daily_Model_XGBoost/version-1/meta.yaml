@@ -1,0 +1,12 @@
+creation_timestamp: 1723924253390
+current_stage: None
+description: ''
+last_updated_timestamp: 1723924253390
+name: BTC-USD_Daily_Model_XGBoost
+run_id: f3bae0e2b9654740a48b71f43091340b
+run_link: ''
+source: mlflow-artifacts:/249947113104235712/f3bae0e2b9654740a48b71f43091340b/artifacts/Daily_BTC-USD_XGBoost
+status: READY
+status_message: null
+user_id: null
+version: 1
