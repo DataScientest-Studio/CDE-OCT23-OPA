@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/415494401493882920
+creation_time: 1723925791014
+experiment_id: '415494401493882920'
+last_update_time: 1723925791014
+lifecycle_stage: active
+name: Daily_EURUSD=X_LinearRegression

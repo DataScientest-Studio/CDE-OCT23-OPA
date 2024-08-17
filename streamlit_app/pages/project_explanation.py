@@ -55,6 +55,11 @@ st.write(
     - Data modeling to convert _time series data into features_
     - Model is trained and registered using _mlflow_
     - The _mlflow UI's_ is an important tool to improve the models
+    - The four models used in this app are:
+        - Linear Regression
+        - XGBoost 
+        - DecisionTreeRegressor
+        - RandomForestRegressor
     """
 )
 

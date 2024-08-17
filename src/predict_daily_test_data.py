@@ -26,12 +26,12 @@ from ft_tables import load_data
 from functions import charge_model
 from train_tsif_model_daily import mlflow_daily, mlflow_daily_register
 
-def register_daily_model(exchange):
+def register_daily_model(exchange, model):
     model = None
 
     # IS THERE ANY MODEL? 
     try:
-        model = charge_model(exchange)
+        model = charge_model(exchange, model)
     
     except Exception as e:
         print(f"{e}")
@@ -63,13 +63,13 @@ def register_daily_model(exchange):
             mlflow_daily_register(exchange)
             
 
-def predict_test_data(exchange):
+def predict_test_data(exchange, model_name):
     
     model = None
 
     # IS THERE ANY MODEL? 
     try:
-        model = charge_model(exchange)
+        model = charge_model(exchange, model_name)
     
     
     except Exception as e:
@@ -153,10 +153,10 @@ def predict_test_data(exchange):
             return predictions
         
         
-def return_test_prediction_data(exchange: str) -> dict:
+def return_test_prediction_data(exchange: str, model:str) -> dict:
     # Assuming these functions are defined elsewhere and imported
     X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test = ts_into_features_Daily(exchange)
-    predictions = predict_test_data(exchange)
+    predictions = predict_test_data(exchange ,model)
 
     X_train = X_train[['datetime']]
     X_train['Open'] = y_train
@@ -184,7 +184,7 @@ def return_test_prediction_data(exchange: str) -> dict:
     return result
 
 
-def predict_exchange_future(exchange: str, days: int) -> Dict[str, Any]:
+def predict_exchange_future(exchange: str, days: int, model:str) -> Dict[str, Any]:
 
     df_original = get_daily_data(exchange)
 
@@ -209,7 +209,7 @@ def predict_exchange_future(exchange: str, days: int) -> Dict[str, Any]:
     last_day = features_only_numeric.iloc[-1:]
     last_date = dates.iloc[-1:]
 
-    model = charge_model(exchange)
+    model = charge_model(exchange, model)
 
     prediction = model.predict(last_day)
 

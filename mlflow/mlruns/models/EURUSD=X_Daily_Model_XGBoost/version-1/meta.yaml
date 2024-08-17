@@ -1,0 +1,12 @@
+creation_timestamp: 1723925977061
+current_stage: None
+description: ''
+last_updated_timestamp: 1723925977061
+name: EURUSD=X_Daily_Model_XGBoost
+run_id: 125e24ec33644dad9250ac05f6f90510
+run_link: ''
+source: mlflow-artifacts:/181713719571348571/125e24ec33644dad9250ac05f6f90510/artifacts/Daily_EURUSD=X_XGBoost
+status: READY
+status_message: null
+user_id: null
+version: 1

@@ -123,23 +123,22 @@ def register_d_model(exchange:str, model:str):
 # PREDICTIONS
 
 @api.post("/return_test_prediction_data")
-def api_return_test_prediction_data(request: ExchangeRequest):
-    exchange = request.exchange
+def api_return_test_prediction_data(exchange, model):
     try:
-        result = return_test_prediction_data(exchange)
+        result = return_test_prediction_data(exchange, model)
         return {"status": "success", "data": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
 
 @api.post("/predict_exchange_future")
-def api_predict_exchange_future(request: PredictionRequest):
-    exchange = request.exchange
-    days = request.days
+def api_predict_exchange_future(exchange,
+                                model,
+                                days = None):
     try:
         if days is None:
             raise HTTPException(status_code=400, detail="Parameter 'days' is required for this endpoint")
-        result = predict_exchange_future(exchange, days)
+        result = predict_exchange_future(exchange, days, model)
         # Ensure the result is serializable
         return {"status": "success", "future_predictions": result}
     except Exception as e:
