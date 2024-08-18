@@ -2,15 +2,19 @@ import mysql.connector
 from mlflow import MlflowClient, set_tracking_uri
 import mlflow
 import pandas as pd
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 
 def database_connection():
     connection = mysql.connector.connect(
-        user = 'root',
-        password = 'root',
-        host = 'localhost',
-        port = 3306,
-        database = 'Historical_Data'
+        user=os.getenv('DB_USER'),
+        password=os.getenv('DB_PASSWORD'),
+        host=os.getenv('DB_HOST'),
+        port=int(os.getenv('DB_PORT')),
+        database=os.getenv('DB_NAME')
     )
     print("MySQL DB Connected")
     return connection

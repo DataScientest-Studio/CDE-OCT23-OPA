@@ -5,6 +5,14 @@ import streamlit as st
 
 # ---- PAGE SETUP ------
 
+## HOME PAGE
+
+home_page = st.Page(
+    page = 'pages/home.py',
+    title = "Home",
+    icon = ":material/home:"
+)
+
 ## DASHBOARD
 
 daily_analysis = st.Page(
@@ -54,9 +62,9 @@ ml_model_metrics = st.Page(
     icon = ":material/analytics:"
 )
 
-mlflow = st.Page(
-    page = "pages/mlflow.py",
-    title = "mlflow",
+predictions = st.Page(
+    page = "pages/predictions.py",
+    title = "Plot Predictions",
     
     icon = ":material/waterfall_chart:"
 )
@@ -80,9 +88,10 @@ about_us = st.Page(
 # ---- NAVIGATION SETUP
 pg = st.navigation(
     {
+        "CRYPTOBOT": [home_page],
         "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
         "STREAMING": [streaming],
-        "MACHINE LEARNING": [ml, ml_model, ml_model_metrics, mlflow],
+        "MACHINE LEARNING": [ml, ml_model, ml_model_metrics, predictions],
         "PROJECT INFORMATION": [project_explanation, about_us]
             
     }

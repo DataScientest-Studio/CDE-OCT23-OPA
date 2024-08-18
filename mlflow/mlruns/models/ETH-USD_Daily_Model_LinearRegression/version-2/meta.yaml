@@ -1,0 +1,12 @@
+creation_timestamp: 1723974330936
+current_stage: None
+description: ''
+last_updated_timestamp: 1723974330936
+name: ETH-USD_Daily_Model_LinearRegression
+run_id: ea3c8591549f4197a48e123b113ccc45
+run_link: ''
+source: mlflow-artifacts:/807908617215683571/ea3c8591549f4197a48e123b113ccc45/artifacts/Daily_ETH-USD_LinearRegression
+status: READY
+status_message: null
+user_id: null
+version: 2

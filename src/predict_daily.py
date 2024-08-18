@@ -19,7 +19,7 @@ import argparse
 import os
 from dateutil.relativedelta import relativedelta
 import json
-from typing import Dict, Any
+from typing import List, Dict, Any
 
 from functions_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_daily_data
 from ft_tables import load_data
@@ -96,7 +96,7 @@ def predict_test_data(exchange, model_name):
             mlflow_daily_register(exchange)
             
             #Charge the model:
-            model = charge_model(exchange)
+            model = charge_model(exchange, model_name)
             
             #Get the data to predict:
             X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test = ts_into_features_Daily(exchange)
@@ -111,7 +111,7 @@ def predict_test_data(exchange, model_name):
             mlflow_daily_register(exchange)
             
             #Charge the model:
-            model = charge_model(exchange)
+            model = charge_model(exchange, model_name)
             
             #Get the data to predict:
             X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test = ts_into_features_Daily(exchange)
@@ -153,10 +153,10 @@ def predict_test_data(exchange, model_name):
             return predictions
         
         
-def return_test_prediction_data(exchange: str, model:str) -> dict:
+def return_test_prediction_data(exchange: str, model: str) -> dict:
     # Assuming these functions are defined elsewhere and imported
     X_test_only_numeric, X_train_only_numeric, y_test, y_train, X_train, X_test = ts_into_features_Daily(exchange)
-    predictions = predict_test_data(exchange ,model)
+    predictions = predict_test_data(exchange, model)
 
     X_train = X_train[['datetime']]
     X_train['Open'] = y_train
@@ -184,7 +184,7 @@ def return_test_prediction_data(exchange: str, model:str) -> dict:
     return result
 
 
-def predict_exchange_future(exchange: str, days: int, model:str) -> Dict[str, Any]:
+def predict_exchange_future(exchange, model_name, days: int):
 
     df_original = get_daily_data(exchange)
 
@@ -209,7 +209,9 @@ def predict_exchange_future(exchange: str, days: int, model:str) -> Dict[str, An
     last_day = features_only_numeric.iloc[-1:]
     last_date = dates.iloc[-1:]
 
-    model = charge_model(exchange, model)
+    model = charge_model(exchange, model_name)
+    if model is None:
+        print("There is no model")
 
     prediction = model.predict(last_day)
 
@@ -243,6 +245,8 @@ def predict_exchange_future(exchange: str, days: int, model:str) -> Dict[str, An
     result['exchange'] = exchange
     
     result = result[['datetime', 'exchange', 'predicted_price']]
+    result['datetime'] = result['datetime'].dt.strftime('%Y-%m-%dT%H:%M:%S')
+    
 
     # Convert the result DataFrame to JSON
     result = result.to_dict(orient='records')  # Convert DataFrame to a list of dictionaries

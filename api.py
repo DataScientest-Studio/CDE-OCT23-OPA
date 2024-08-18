@@ -3,6 +3,7 @@ from pydantic import BaseModel
 import uvicorn
 import sys
 import os
+from typing import List, Dict, Any
 
 sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
 
@@ -14,7 +15,7 @@ from src.ft_tables import load_data
 from src.functions_daily import *
 
 
-from src.predict_daily_test_data import  predict_test_data, return_test_prediction_data, predict_exchange_future, register_daily_model
+from src.predict_daily import  predict_test_data, return_test_prediction_data, predict_exchange_future, register_daily_model
 from src.train_tsif_model_daily import mlflow_daily_register
 
 from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily
@@ -36,7 +37,8 @@ class ExchangeRequest(BaseModel):
     
 class PredictionRequest(BaseModel):
     exchange: str
-    days: int = None  # Optional parameter for predict_exchange_future
+    model_name: str
+    days: int
 
 
 # API FUNCTIONS
@@ -122,7 +124,7 @@ def register_d_model(exchange:str, model:str):
 
 # PREDICTIONS
 
-@api.post("/return_test_prediction_data")
+@api.post("/return_test_prediction_data/{exchange}&{model}")
 def api_return_test_prediction_data(exchange, model):
     try:
         result = return_test_prediction_data(exchange, model)
@@ -131,16 +133,12 @@ def api_return_test_prediction_data(exchange, model):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@api.post("/predict_exchange_future")
-def api_predict_exchange_future(exchange,
-                                model,
-                                days = None):
+@api.get("/predict_exchange_future/{exchange}&{model}&{days}", response_model=List[Dict[str, Any]])
+def api_predict_exchange_future(exchange:str, model:str, days:int):
     try:
-        if days is None:
-            raise HTTPException(status_code=400, detail="Parameter 'days' is required for this endpoint")
-        result = predict_exchange_future(exchange, days, model)
+        result = predict_exchange_future(exchange, model, days)
         # Ensure the result is serializable
-        return {"status": "success", "future_predictions": result}
+        return {"status": "success", "data": result}
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 

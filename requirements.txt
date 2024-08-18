@@ -15,3 +15,4 @@ statsmodels
 graphviz
 networkx
 seaborn
+python-dotenv
