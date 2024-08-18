@@ -40,6 +40,7 @@ def fetch_fear_data():
     else:
         return None
     
+    
 
 
 # Get current year and month

@@ -1,0 +1,53 @@
+artifact_path: Daily_BNB-USD_DecisionTreeRegressor
+flavors:
+  python_function:
+    env:
+      conda: conda.yaml
+      virtualenv: python_env.yaml
+    loader_module: mlflow.sklearn
+    model_path: model.pkl
+    predict_fn: predict
+    python_version: 3.8.10
+  sklearn:
+    code: null
+    pickled_model: model.pkl
+    serialization_format: cloudpickle
+    sklearn_version: 1.3.2
+mlflow_version: 2.15.1
+model_size_bytes: 271849
+model_uuid: 2b8b84c0644d491ba304192bb1e6402f
+run_id: 5d0944752b3b4076aed07f26f772b89d
+saved_input_example_info:
+  artifact_path: input_example.json
+  pandas_orient: split
+  serving_input_path: serving_input_payload.json
+  type: dataframe
+signature:
+  inputs: '[{"type": "float", "name": "open_previous_31_day", "required": true}, {"type":
+    "float", "name": "open_previous_30_day", "required": true}, {"type": "float",
+    "name": "open_previous_29_day", "required": true}, {"type": "float", "name": "open_previous_28_day",
+    "required": true}, {"type": "float", "name": "open_previous_27_day", "required":
+    true}, {"type": "float", "name": "open_previous_26_day", "required": true}, {"type":
+    "float", "name": "open_previous_25_day", "required": true}, {"type": "float",
+    "name": "open_previous_24_day", "required": true}, {"type": "float", "name": "open_previous_23_day",
+    "required": true}, {"type": "float", "name": "open_previous_22_day", "required":
+    true}, {"type": "float", "name": "open_previous_21_day", "required": true}, {"type":
+    "float", "name": "open_previous_20_day", "required": true}, {"type": "float",
+    "name": "open_previous_19_day", "required": true}, {"type": "float", "name": "open_previous_18_day",
+    "required": true}, {"type": "float", "name": "open_previous_17_day", "required":
+    true}, {"type": "float", "name": "open_previous_16_day", "required": true}, {"type":
+    "float", "name": "open_previous_15_day", "required": true}, {"type": "float",
+    "name": "open_previous_14_day", "required": true}, {"type": "float", "name": "open_previous_13_day",
+    "required": true}, {"type": "float", "name": "open_previous_12_day", "required":
+    true}, {"type": "float", "name": "open_previous_11_day", "required": true}, {"type":
+    "float", "name": "open_previous_10_day", "required": true}, {"type": "float",
+    "name": "open_previous_9_day", "required": true}, {"type": "float", "name": "open_previous_8_day",
+    "required": true}, {"type": "float", "name": "open_previous_7_day", "required":
+    true}, {"type": "float", "name": "open_previous_6_day", "required": true}, {"type":
+    "float", "name": "open_previous_5_day", "required": true}, {"type": "float", "name":
+    "open_previous_4_day", "required": true}, {"type": "float", "name": "open_previous_3_day",
+    "required": true}, {"type": "float", "name": "open_previous_2_day", "required":
+    true}, {"type": "float", "name": "open_previous_1_day", "required": true}]'
+  outputs: '[{"type": "tensor", "tensor-spec": {"dtype": "float64", "shape": [-1]}}]'
+  params: null
+utc_time_created: '2024-08-18 15:43:27.068669'

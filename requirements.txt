@@ -16,3 +16,4 @@ graphviz
 networkx
 seaborn
 python-dotenv
+openpyxl

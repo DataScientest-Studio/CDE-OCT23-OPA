@@ -19,6 +19,36 @@ def get_daily_data_json(exchange):
     else:
         return df_original.to_json(orient='records')
     
+def get_number_of_exchanges():
+    connection = database_connection()
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT DISTINCT(EXCHANGE) AS NUMBER FROM FT_DAILY_DATA")
+    results = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    df_original = pd.DataFrame(results, columns=columns)
+    if df_original.empty:
+        print("There is no data")
+        return 0
+    else:
+        number = len(df_original)
+        return number
+    
+def get_unique_exchanges():
+    connection = database_connection()
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT Exchange, MAX(id_date) as Last_Date FROM FT_DAILY_DATA GROUP BY Exchange")
+    results = cursor.fetchall()
+    columns = [column[0] for column in cursor.description]
+    df_original = pd.DataFrame(results, columns=columns)
+    if df_original.empty:
+        print("There is no data")
+        return 0
+    else:
+        return df_original.to_json(orient='records')
+        
+    
+    
+    
 
 def get_hourly_data_json(exchange):
     connection = database_connection()

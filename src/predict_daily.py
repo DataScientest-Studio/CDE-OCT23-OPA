@@ -184,7 +184,7 @@ def return_test_prediction_data(exchange: str, model: str) -> dict:
     return result
 
 
-def predict_exchange_future(exchange, model_name, days: int):
+def predict_exchange_future(exchange, model_name, days):
 
     df_original = get_daily_data(exchange)
 
@@ -245,7 +245,7 @@ def predict_exchange_future(exchange, model_name, days: int):
     result['exchange'] = exchange
     
     result = result[['datetime', 'exchange', 'predicted_price']]
-    result['datetime'] = result['datetime'].dt.strftime('%Y-%m-%dT%H:%M:%S')
+    result['datetime'] = result['datetime'].dt.strftime('%Y-%m-%d')
     
 
     # Convert the result DataFrame to JSON

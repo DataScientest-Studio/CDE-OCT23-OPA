@@ -18,7 +18,7 @@ from src.functions_daily import *
 from src.predict_daily import  predict_test_data, return_test_prediction_data, predict_exchange_future, register_daily_model
 from src.train_tsif_model_daily import mlflow_daily_register
 
-from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily
+from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily, get_number_of_exchanges, get_unique_exchanges
 
 
 
@@ -65,7 +65,22 @@ def recharge_dimension_tables():
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
     
+@api.get("/get_exchanges_number")
+def number_exchanges():
+    number = get_number_of_exchanges()
+    if number is None:
+        raise HTTPException(status_code=404, detail="No daily data found")
+    return number
+        
     
+@api.get("/get_unique_exchanges")
+def unique_exchanges():
+    data = get_unique_exchanges()
+    if data is None:
+        raise HTTPException(status_code=404, detail="No daily data found")
+    return data
+        
+        
 @api.get("/daily_data/{exchange}")
 def read_daily_data(exchange: str):
     data = get_daily_data_json(exchange)
@@ -133,10 +148,10 @@ def api_return_test_prediction_data(exchange, model):
         raise HTTPException(status_code=500, detail=str(e))
 
 
-@api.get("/predict_exchange_future/{exchange}&{model}&{days}", response_model=List[Dict[str, Any]])
-def api_predict_exchange_future(exchange:str, model:str, days:int):
+@api.get("/predict_exchange_future/{exchange}&{model}")
+def api_predict_exchange_future(exchange, model):
     try:
-        result = predict_exchange_future(exchange, model, days)
+        result = predict_exchange_future(exchange, model, 30)
         # Ensure the result is serializable
         return {"status": "success", "data": result}
     except Exception as e:

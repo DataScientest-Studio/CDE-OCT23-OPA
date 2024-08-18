@@ -1,0 +1,6 @@
+artifact_location: mlflow-artifacts:/859644165075804930
+creation_time: 1723995806789
+experiment_id: '859644165075804930'
+last_update_time: 1723995806789
+lifecycle_stage: active
+name: Daily_BNB-USD_DecisionTreeRegressor

@@ -44,21 +44,28 @@ streaming = st.Page(
 
 ## MACHINE LEARNING
 
+
 ml = st.Page(
     page = "pages/ml.py",
+    title = "Machine Learning",
+    icon = ":material/school:"
+    )
+
+ml_data_modeling = st.Page(
+    page = "pages/ml_data_modeling.py",
     title = "Data modeling",
     icon = ":material/schema:"
     )
 
-ml_model = st.Page(
-    page = "pages/ml_model.py",
+ml_models = st.Page(
+    page = "pages/ml_models.py",
     title = "ML Models",
     icon = ":material/query_stats:"
 )
 
 ml_model_metrics = st.Page(
-    page = "pages/ml_model_metrics.py",
-    title = "ML Model Metrics",
+    page = "pages/ml_models_metrics.py",
+    title = "ML Models Metrics",
     icon = ":material/analytics:"
 )
 
@@ -88,10 +95,10 @@ about_us = st.Page(
 # ---- NAVIGATION SETUP
 pg = st.navigation(
     {
-        "CRYPTOBOT": [home_page],
+        "": [home_page],
         "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
         "STREAMING": [streaming],
-        "MACHINE LEARNING": [ml, ml_model, ml_model_metrics, predictions],
+        "MACHINE LEARNING": [ml, ml_data_modeling, ml_models, ml_model_metrics, predictions],
         "PROJECT INFORMATION": [project_explanation, about_us]
             
     }

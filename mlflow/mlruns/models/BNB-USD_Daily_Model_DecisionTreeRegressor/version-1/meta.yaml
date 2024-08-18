@@ -1,0 +1,12 @@
+creation_timestamp: 1723995873212
+current_stage: None
+description: ''
+last_updated_timestamp: 1723995873212
+name: BNB-USD_Daily_Model_DecisionTreeRegressor
+run_id: 5d0944752b3b4076aed07f26f772b89d
+run_link: ''
+source: mlflow-artifacts:/859644165075804930/5d0944752b3b4076aed07f26f772b89d/artifacts/Daily_BNB-USD_DecisionTreeRegressor
+status: READY
+status_message: null
+user_id: null
+version: 1
