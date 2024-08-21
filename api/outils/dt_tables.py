@@ -3,7 +3,7 @@ from datetime import datetime, timedelta
 import mysql.connector
 import logging
 
-from functions import database_connection
+from outils.functions import database_connection
 
 
 logging.basicConfig(level=logging.INFO,

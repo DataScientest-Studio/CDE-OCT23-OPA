@@ -21,10 +21,10 @@ from dateutil.relativedelta import relativedelta
 import json
 from typing import List, Dict, Any
 
-from functions_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_daily_data
-from ft_tables import load_data
-from functions import charge_model
-from train_tsif_model_daily import mlflow_daily, mlflow_daily_register
+from outils.data_modeling_daily import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_Daily, get_daily_data
+from outils.ft_tables import load_data
+from outils.functions import charge_model
+from models.tsif_model_daily import mlflow_daily, mlflow_daily_register
 
 def register_daily_model(exchange, model):
     model = None

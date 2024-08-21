@@ -5,20 +5,20 @@ import sys
 import os
 from typing import List, Dict, Any
 
-sys.path.append(os.path.join(os.path.dirname(__file__), 'src'))
+sys.path.append(os.path.join(os.path.dirname(__file__), 'api'))
 
 #IMPORT FUNCTIONS
 
-from src.functions import database_connection, charge_model, experiments_metrics
-from src.dt_tables import dt_tables
-from src.ft_tables import load_data
-from src.functions_daily import *
+from outils.functions import database_connection, charge_model, experiments_metrics
+from outils.dt_tables import dt_tables
+from outils.ft_tables import load_data
+from outils.data_modeling_daily import *
 
 
-from src.predict_daily import  predict_test_data, return_test_prediction_data, predict_exchange_future, register_daily_model
-from src.train_tsif_model_daily import mlflow_daily_register
+from endpoints.predict_daily import  predict_test_data, return_test_prediction_data, predict_exchange_future, register_daily_model
+from models.tsif_model_daily import mlflow_daily_register
 
-from src.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily, get_number_of_exchanges, get_unique_exchanges
+from outils.functions_API import get_daily_data_json, get_hourly_data_json, get_fear_data, ts_into_features_daily, get_number_of_exchanges, get_unique_exchanges
 
 
 

@@ -19,7 +19,7 @@ from sklearn.model_selection import train_test_split
 import argparse
 import os
 
-from functions_hourly import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_hourly
+from outils.data_modeling_hourly import get_cutoff_indices, transform_ts_data_into_features_and_target, train_test_split, ts_into_features_hourly
 
 
 

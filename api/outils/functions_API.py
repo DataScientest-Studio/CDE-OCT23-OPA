@@ -1,8 +1,8 @@
 
 import pandas as pd
 
-from functions import database_connection
-from functions_daily import get_daily_data, transform_ts_data_into_features_and_target
+from outils.functions import database_connection
+from outils.data_modeling_daily import get_daily_data, transform_ts_data_into_features_and_target
 
 def get_daily_data_json(exchange):
     connection = database_connection()

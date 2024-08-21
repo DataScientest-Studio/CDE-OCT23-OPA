@@ -19,7 +19,7 @@ import argparse
 import os
 from dateutil.relativedelta import relativedelta
 
-from functions import database_connection
+from outils.functions import database_connection
 
 # FUNCTIONS:
 

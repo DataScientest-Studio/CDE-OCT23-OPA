@@ -12,7 +12,7 @@ import argparse
 from datetime import datetime
 
 
-from functions import database_connection
+from outils.functions import database_connection
 
 def number_of_days():
     #The number of days since the fear data was registered
