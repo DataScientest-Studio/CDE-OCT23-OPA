@@ -2,10 +2,9 @@ import logging
 import uuid
 
 from cassandra.cluster import Cluster, DCAwareRoundRobinPolicy
-from cassandra.policies import RoundRobinPolicy
 from cassandra.query import BatchStatement, ConsistencyLevel
 from pyspark.sql import SparkSession
-from pyspark.sql.functions import from_json, col
+from pyspark.sql.functions import from_json, col, exists
 from pyspark.sql.types import StructType, StructField, StringType, FloatType, TimestampType
 
 
@@ -13,11 +12,11 @@ def create_keyspace(session):
     try:
         session.execute("""
             CREATE KEYSPACE IF NOT EXISTS spark_streams
-            WITH replication = {'class': 'NetworkTopologyStrategy', 'datacenter1': 3};
+            WITH replication = {'class': 'NetworkTopologyStrategy', 'dc1': 3};
         """)
         logging.info("Keyspace created successfully")
     except Exception as e:
-        logging.error(f"Error creating keyspace: {e}")
+        logging.exception("Error creating keyspace")
 
 
 def create_table(session):
@@ -29,19 +28,22 @@ def create_table(session):
             symbol TEXT,
             price FLOAT,
             quantity FLOAT,
-            timestamp TIMESTAMP);
+            timestamp TIMESTAMP,
+            PRIMARY KEY (id_transaction)
+            );
         """)
         logging.info("Table created successfully")
     except Exception as e:
-        logging.error(f"Error creating table: {e}")
+        logging.exception("Error creating table")
 
 
 def insert_data(batch_df, epoch_id):
     logging.info(f"Inserting data for batch {epoch_id}...")
     try:
-        cluster = Cluster(['192.168.1.35'], port=9042)
+        cluster = Cluster(['172.18.0.4'], port=9042)  # Use direct IP address of Cassandra container
         session = cluster.connect('spark_streams')
 
+        check_statement = session.prepare("SELECT COUNT(*) FROM spark_streams.BTCUSDT WHERE id_transaction = ?")
         prepared_statement = session.prepare("""
         INSERT INTO BTCUSDT (id, id_transaction, symbol, price, quantity, timestamp)
         VALUES (?, ?, ?, ?, ?, ?)
@@ -49,18 +51,26 @@ def insert_data(batch_df, epoch_id):
 
         id_counter = 1
         for row in batch_df.collect():
-            try:
-                session.execute(prepared_statement,
-                                (id_counter, str(uuid.uuid4()), row.symbol, row.price, row.qty, row.time))
-                id_counter += 1
-            except Exception as e:
-                logging.error(f"Failed to insert row: {row}. Error: {e}")
+            logging.info(f"Processing row with id_transaction: {row.id_transaction}...")
+            exists = session.execute(check_statement, (row.id_transaction,))
+            if exists[0].count == 0:
+                try:
+                    session.execute(prepared_statement,
+                                    (id_counter, str(uuid.uuid4()), row.symbol, row.price, row.qty, row.time))
+                    id_counter += 1
+                    logging.info(f"Inserted row: {row}")
+                except Exception as e:
+                    logging.error(f"Failed to insert row: {row}. Error: {e}")
+            else:
+                logging.info(f"Row already exists with id_transaction {row.id_transaction}, skipping insertion.")
 
-        logging.info(f"Batch {epoch_id} inserted successfully")
     except Exception as e:
-        logging.error(f"Could not insert batch {epoch_id}: {str(e)}")
+        logging.exception(f"Could not insert batch {epoch_id}")
     finally:
-        session.shutdown()
+        if 'session' in locals():
+            session.shutdown()
+        if 'cluster' in locals():
+            cluster.shutdown()
 
 
 def create_spark_session():
@@ -69,14 +79,14 @@ def create_spark_session():
             .appName('SparkDataStreaming') \
             .config('spark.jars.packages', "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \
-            .config('spark.cassandra.connection.host', '192.168.1.51') \
+            .config('spark.cassandra.connection.host', '172.18.0.4') \
             .config('spark.cassandra.connection.port', '9042') \
             .getOrCreate()
         s_conn.sparkContext.setLogLevel("ERROR")
         logging.info("Spark connection created successfully!")
         return s_conn
     except Exception as e:
-        logging.error(f"Couldn't create the Spark session due to exception {e}")
+        logging.exception("Couldn't create the Spark session")
         return None
 
 
@@ -102,14 +112,14 @@ def kafka_connect(spark_conn):
         logging.info("Kafka dataframe created successfully")
         return df_spark
     except Exception as e:
-        logging.error(f"Kafka dataframe could not be created because: {e}")
+        logging.exception("Kafka dataframe could not be created")
         return None
 
 
 def create_cassandra_connection():
     try:
-        contact_point = "192.168.1.35"
-        load_balancing_policy = DCAwareRoundRobinPolicy(local_dc='datacenter1')
+        contact_point = "172.18.0.4"  # Use direct IP address of Cassandra container
+        load_balancing_policy = DCAwareRoundRobinPolicy(local_dc='dc1')
         cluster = Cluster(
             [contact_point],
             load_balancing_policy=load_balancing_policy,
@@ -118,7 +128,7 @@ def create_cassandra_connection():
         cass_session = cluster.connect()
         return cass_session
     except Exception as e:
-        logging.error(f"Couldn't create the Cassandra connection due to {e}")
+        logging.exception("Couldn't create the Cassandra connection")
         return None
 
 
@@ -137,6 +147,9 @@ def main():
 
                 query = spark_df.writeStream.foreachBatch(insert_data).start()
                 query.awaitTermination()
+
+    if 'spark' in locals():
+        spark.stop()
 
 
 if __name__ == "__main__":
