@@ -23,13 +23,11 @@ def create_table(session):
     try:
         session.execute("""
         CREATE TABLE IF NOT EXISTS spark_streams.BTCUSDT (
-            id int PRIMARY KEY,
-            id_transaction TEXT,
+            id bigint PRIMARY KEY,
             symbol TEXT,
             price FLOAT,
             quantity FLOAT,
-            timestamp TIMESTAMP,
-            PRIMARY KEY (id_transaction)
+            timestamp TIMESTAMP
             );
         """)
         logging.info("Table created successfully")
@@ -40,29 +38,33 @@ def create_table(session):
 def insert_data(batch_df, epoch_id):
     logging.info(f"Inserting data for batch {epoch_id}...")
     try:
-        cluster = Cluster(['172.18.0.4'], port=9042)  # Use direct IP address of Cassandra container
+        cluster = Cluster(['localhost'], port=9042)
         session = cluster.connect('spark_streams')
 
-        check_statement = session.prepare("SELECT COUNT(*) FROM spark_streams.BTCUSDT WHERE id_transaction = ?")
+        # Use 'id' as the primary key
+        check_statement = session.prepare("SELECT id FROM spark_streams.BTCUSDT WHERE id = ?")
         prepared_statement = session.prepare("""
-        INSERT INTO BTCUSDT (id, id_transaction, symbol, price, quantity, timestamp)
-        VALUES (?, ?, ?, ?, ?, ?)
+        INSERT INTO BTCUSDT (id, symbol, price, quantity, timestamp)
+        VALUES (?, ?, ?, ?, ?)
         """)
 
-        id_counter = 1
         for row in batch_df.collect():
-            logging.info(f"Processing row with id_transaction: {row.id_transaction}...")
-            exists = session.execute(check_statement, (row.id_transaction,))
-            if exists[0].count == 0:
+            logging.info(f"Processing row with id: {row.id}...")
+
+            # Ensure 'id' is an integer
+            row_id = int(row.id)  # Convert 'id' to integer
+
+            # Check if the row already exists using 'id'
+            exists = session.execute(check_statement, (row_id,))
+            if not exists.one():  # If no rows are returned
                 try:
                     session.execute(prepared_statement,
-                                    (id_counter, str(uuid.uuid4()), row.symbol, row.price, row.qty, row.time))
-                    id_counter += 1
+                                    (row_id, row.symbol, row.price, row.qty, row.time))
                     logging.info(f"Inserted row: {row}")
                 except Exception as e:
                     logging.error(f"Failed to insert row: {row}. Error: {e}")
             else:
-                logging.info(f"Row already exists with id_transaction {row.id_transaction}, skipping insertion.")
+                logging.info(f"Row already exists with id {row_id}, skipping insertion.")
 
     except Exception as e:
         logging.exception(f"Could not insert batch {epoch_id}")
@@ -79,7 +81,7 @@ def create_spark_session():
             .appName('SparkDataStreaming') \
             .config('spark.jars.packages', "com.datastax.spark:spark-cassandra-connector_2.12:3.4.0") \
             .config("spark.jars.packages", "org.apache.spark:spark-sql-kafka-0-10_2.12:3.1.2") \
-            .config('spark.cassandra.connection.host', '172.18.0.4') \
+            .config('spark.cassandra.connection.host', 'localhost') \
             .config('spark.cassandra.connection.port', '9042') \
             .getOrCreate()
         s_conn.sparkContext.setLogLevel("ERROR")
@@ -118,14 +120,17 @@ def kafka_connect(spark_conn):
 
 def create_cassandra_connection():
     try:
-        contact_point = "172.18.0.4"  # Use direct IP address of Cassandra container
+        contact_point = "localhost"  # Use direct IP address of Cassandra container
         load_balancing_policy = DCAwareRoundRobinPolicy(local_dc='dc1')
+        logging.info(f"Attempting to connect to Cassandra at {contact_point} on port 9042")
+
         cluster = Cluster(
             [contact_point],
             load_balancing_policy=load_balancing_policy,
-            protocol_version=5
+            protocol_version=4
         )
         cass_session = cluster.connect()
+        logging.info("Cassandra connection created successfully!")
         return cass_session
     except Exception as e:
         logging.exception("Couldn't create the Cassandra connection")

@@ -236,6 +236,7 @@ networks:
   confluent:
     name: confluent
     driver: bridge
+    external: true
 
 volumes:
   my-db:
