@@ -17,6 +17,6 @@ if [ ! -f "/opt/airflow/airflow.db" ]; then
     --password admin
 fi
 
-$(command -v airflow) db upgrade
+$(command -v airflow) db migrate
 
 exec airflow webserver

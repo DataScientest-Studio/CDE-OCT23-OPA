@@ -105,7 +105,7 @@ def kafka_connect(spark_conn):
         df_spark = spark_conn.readStream \
             .format('kafka') \
             .option('kafka.bootstrap.servers', 'localhost:9092') \
-            .option('subscribe', 'binance_streaming') \
+            .option('subscribe', 'binance_trades') \
             .option('startingOffsets', 'earliest') \
             .load() \
             .selectExpr("CAST(value AS STRING)") \

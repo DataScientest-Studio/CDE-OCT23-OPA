@@ -1,3 +1,4 @@
+
 services:
   mysql:
     build: ./mysql/
@@ -67,7 +68,7 @@ services:
       KAFKA_TRANSACTION_STATE_LOG_REPLICATION_FACTOR: 1
       KAFKA_JMX_PORT: 9101
       KAFKA_JMX_HOSTNAME: localhost
-      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8081
+      KAFKA_CONFLUENT_SCHEMA_REGISTRY_URL: http://schema-registry:8083
       CONFLUENT_METRICS_REPORTER_BOOTSTRAP_SERVERS: broker:29092
       CONFLUENT_METRICS_REPORTER_TOPIC_REPLICAS: 1
       CONFLUENT_METRICS_ENABLE: 'false'
@@ -88,7 +89,7 @@ services:
       broker:
         condition: service_healthy
     ports:
-      - "8081:8081"
+      - "8083:8081"  # Changed host port to 8083 to avoid conflict
     environment:
       SCHEMA_REGISTRY_HOST_NAME: schema-registry
       SCHEMA_REGISTRY_KAFKASTORE_BOOTSTRAP_SERVERS: 'broker:29092'
@@ -114,12 +115,12 @@ services:
       - "9021:9021"
     environment:
       CONTROL_CENTER_BOOTSTRAP_SERVERS: 'broker:29092'
-      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8081"
+      CONTROL_CENTER_SCHEMA_REGISTRY_URL: "http://schema-registry:8083"
       CONTROL_CENTER_REPLICATION_FACTOR: 1
       CONTROL_CENTER_INTERNAL_TOPICS_PARTITIONS: 1
       CONTROL_CENTER_MONITORING_INTERCEPTOR_TOPIC_PARTITIONS: 1
       CONFLUENT_METRICS_TOPIC_REPLICATION: 1
-      CONFLIENT_METRICS_ENABLE: 'false'
+      CONFLUENT_METRICS_ENABLE: 'false'
       PORT: 9021
     networks:
       - confluent
@@ -130,16 +131,20 @@ services:
       retries: 5
 
   webserver:
-    image: apache/airflow:2.6.0-python3.9
+    build:
+      context: ./streaming
+      dockerfile: Dockerfile
+    container_name: airflow_webserver
     command: webserver
     entrypoint: [ '/opt/airflow/script/entrypoint.sh' ]
     depends_on:
       - postgres
     environment:
       - LOAD_EX=n
-      - EXECUTOR=Sequential
+      - EXECUTOR=Local
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       - AIRFLOW_WEBSERVER_SECRET_KEY="this_is_a_very_secured_key"
+      - AIRFLOW__WEBSERVER__WEB_SERVER_PORT=8081
     logging:
       options:
         max-size: 10m
@@ -148,8 +153,10 @@ services:
       - ./streaming/dags:/opt/airflow/dags
       - ./streaming/script/entrypoint.sh:/opt/airflow/script/entrypoint.sh
       - ./streaming/requirements.txt:/opt/airflow/requirements.txt
+      - ./streaming/script:/opt/airflow/script
+      - ./streaming/airflow.cfg:/opt/airflow/airflow.cfg
     ports:
-      - "8080:8080"
+      - "8081:8081"  # Ensure unique port assignment for Airflow
     healthcheck:
       test: [ 'CMD-SHELL', "[ -f /opt/airflow/airflow-webserver.pid ]" ]
       interval: 30s
@@ -159,16 +166,21 @@ services:
       - confluent
 
   scheduler:
-    image: apache/airflow:2.6.0-python3.9
+    build:
+      context: ./streaming
+      dockerfile: Dockerfile
+    container_name: airflow_scheduler
     depends_on:
       webserver:
         condition: service_healthy
     volumes:
       - ./streaming/dags:/opt/airflow/dags
       - ./streaming/requirements.txt:/opt/airflow/requirements.txt
+      - ./streaming/script:/opt/airflow/script
+      - ./streaming/airflow.cfg:/opt/airflow/airflow.cfg
     environment:
       - LOAD_EX=n
-      - EXECUTOR=Sequential
+      - EXECUTOR=Local
       - AIRFLOW__DATABASE__SQL_ALCHEMY_CONN=postgresql+psycopg2://airflow:airflow@postgres:5432/airflow
       - AIRFLOW_WEBSERVER_SECRET_KEY="this_is_a_very_secured_key"
     command: bash -c "pip install -r /opt/airflow/requirements.txt && airflow db upgrade && airflow scheduler"
@@ -177,6 +189,7 @@ services:
 
   postgres:
     image: postgres:14.0
+    container_name: postgres
     environment:
       - POSTGRES_USER=airflow
       - POSTGRES_PASSWORD=airflow
@@ -190,25 +203,50 @@ services:
 
   spark-master:
     image: bitnami/spark:latest
+    container_name: spark-master
     command: bin/spark-class org.apache.spark.deploy.master.Master
     ports:
-      - "9090:8080"
-      - "7077:7077"
+      - "8080:8080"  # Spark Master UI
+      - "7077:7077"  # Spark Master Port
+    volumes:
+      - ./scripts:/opt/airflow/scripts
     networks:
       - confluent
+    deploy:
+      resources:
+        limits:
+          cpus: '2.0'    # Limit Spark master to use up to 2 CPUs
+          memory: 2g      # Limit Spark master to use up to 2 GB of memory
+        reservations:
+          cpus: '1.0'    # Reserve at least 1 CPU for Spark master
+          memory: 1g      # Reserve at least 1 GB of memory for Spark master
 
   spark-worker:
     image: bitnami/spark:latest
+    container_name: spark-worker
     command: bin/spark-class org.apache.spark.deploy.worker.Worker spark://spark-master:7077
     depends_on:
       - spark-master
     environment:
-      SPARK_MODE: worker
-      SPARK_WORKER_CORES: 2
-      SPARK_WORKER_MEMORY: 1g
-      SPARK_MASTER_URL: spark://spark-master:7077
+      - SPARK_MODE=worker
+      - SPARK_WORKER_CORES=4
+      - SPARK_WORKER_MEMORY=4g
+      - SPARK_MASTER_URL=spark://spark-master:7077
+      - SPARK_CONF_spark.cassandra.connection.host=cassandra  # Add this line
+      - SPARK_CONF_spark.cassandra.connection.port=9042
+
+    ports:
+      - "8082:8081"  # Spark Worker UI on a different host port to avoid conflicts
     networks:
       - confluent
+    deploy:
+      resources:
+        limits:
+          cpus: '4.0'    # Limit Spark worker to use up to 4 CPUs
+          memory: 6g      # Limit Spark worker to use up to 4 GB of memory
+        reservations:
+          cpus: '2.0'    # Reserve at least 2 CPUs for Spark worker
+          memory: 4g
 
   cassandra:
     image: cassandra:4.0
@@ -234,7 +272,6 @@ services:
 
 networks:
   confluent:
-    name: confluent
     driver: bridge
     external: true
 
