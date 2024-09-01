@@ -24,7 +24,10 @@ def fetch_all_data_from_cassandra():
 st.title('Enhanced BTC/USDT Financial Visualization')
 
 # Add a slider to select the number of data points to display
-num_points = st.sidebar.slider('Select the number of data points to display:', min_value=100, max_value=5000, step=100, value=1000)
+num_points = st.sidebar.slider('Select the number of data points to display:', min_value=100, max_value=100000, step=100, value=1000)
+
+# Add a checkbox to toggle between recent data and all data
+view_all_data = st.sidebar.checkbox('View all data', value=False)
 
 # Add a dropdown for resampling intervals
 resample_interval = st.sidebar.selectbox('Select resampling interval:', ['1min', '5min', '15min'])
@@ -45,8 +48,12 @@ if not data.empty:
     # Filter data by selected date range
     data = data.loc[(data['timestamp'] >= pd.to_datetime(start_date)) & (data['timestamp'] <= pd.to_datetime(end_date))]
 
-    # Keep only the selected number of records based on the slider
-    latest_data = data.head(num_points).copy()  # Use .copy() to avoid SettingWithCopyWarning
+    if not view_all_data:
+        # Keep only the selected number of records based on the slider
+        latest_data = data.head(num_points).copy()  # Use .copy() to avoid SettingWithCopyWarning
+    else:
+        # Use all the data
+        latest_data = data.copy()
 
     # Ensure numeric columns are actually numeric
     latest_data.loc[:, 'price'] = pd.to_numeric(latest_data['price'], errors='coerce')
@@ -76,7 +83,14 @@ if not data.empty:
     fig.add_trace(go.Scatter(x=ohlc_data.index, y=ohlc_data['SMA_20'], mode='lines', name='SMA 20', line=dict(color='blue')))
     fig.add_trace(go.Scatter(x=ohlc_data.index, y=ohlc_data['SMA_50'], mode='lines', name='SMA 50', line=dict(color='orange')))
 
-    fig.update_layout(title=f'BTC/USDT Price Movement (Last {num_points} Data Points)',
+    # Update layout with dynamic title
+    title = 'BTC/USDT Price Movement'
+    if view_all_data:
+        title += ' (All Data)'
+    else:
+        title += f' (Last {num_points} Data Points)'
+
+    fig.update_layout(title=title,
                       xaxis_title='Timestamp',
                       yaxis_title='Price',
                       xaxis_rangeslider_visible=False)

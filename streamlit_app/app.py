@@ -42,6 +42,11 @@ streaming = st.Page(
     icon = ":material/timeline:"
     )
 
+Real_Time_visualisation = st.Page(
+    page = "pages/real_time_visualisation.py",
+    title = "Real Time Visualisation",
+    icon = ":material/timeline:"
+    )
 ## MACHINE LEARNING
 
 
@@ -97,7 +102,7 @@ pg = st.navigation(
     {
         "": [home_page],
         "DASHBOARD ANALYSIS": [kpi, daily_analysis, hourly_analysis],
-        "STREAMING": [streaming],
+        "STREAMING": [streaming, Real_Time_visualisation],
         "MACHINE LEARNING": [ml, ml_data_modeling, ml_models, ml_model_metrics, predictions],
         "PROJECT INFORMATION": [project_explanation, about_us]
             
