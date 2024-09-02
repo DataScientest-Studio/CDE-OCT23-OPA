@@ -16,7 +16,7 @@ uvicorn api:api --reload
 
 ## Streamlit
 
-streamlit run streamlit_app/Home.py
+streamlit run streamlit_app/app.py
 
 
 ## Streaming

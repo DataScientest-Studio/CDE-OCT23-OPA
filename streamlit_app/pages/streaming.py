@@ -9,11 +9,11 @@ def fetch_all_data_from_cassandra():
     session = cluster.connect('spark_streams')   # Update with your Cassandra keyspace
 
     # Fetch all data from the BTCUSDT table
-    query = "SELECT * FROM BTCUSDT"
+    query = "SELECT symbol, timestamp, id, price, quantity FROM BTCUSDT"
     rows = session.execute(query)
 
     # Convert rows to a DataFrame
-    df = pd.DataFrame(list(rows), columns=['id', 'price', 'quantity', 'symbol', 'timestamp'])
+    df = pd.DataFrame(list(rows), columns=['symbol', 'timestamp', 'id', 'price', 'quantity'])
 
     session.shutdown()
     cluster.shutdown()
@@ -56,9 +56,9 @@ if not data.empty:
         latest_data = data.copy()
 
     # Ensure numeric columns are actually numeric
-    latest_data.loc[:, 'price'] = pd.to_numeric(latest_data['price'], errors='coerce')
+    latest_data['price'] = pd.to_numeric(latest_data['price'], errors='coerce')
 
-    # Calculate the open, high, low, and close prices for the candlestick chart
+    # Resample and calculate the open, high, low, and close prices for the candlestick chart
     ohlc_data = latest_data.resample(resample_interval, on='timestamp').agg({
         'price': ['first', 'max', 'min', 'last']
     }).dropna()
@@ -67,8 +67,9 @@ if not data.empty:
     ohlc_data.columns = ['open', 'high', 'low', 'close']
 
     # Calculate Simple Moving Averages (SMA)
-    ohlc_data['SMA_20'] = ohlc_data['close'].rolling(window=20).mean()
-    ohlc_data['SMA_50'] = ohlc_data['close'].rolling(window=50).mean()
+    # Ensure you're calculating SMA on numeric data
+    ohlc_data['SMA_20'] = pd.to_numeric(ohlc_data['close'], errors='coerce').rolling(window=20).mean()
+    ohlc_data['SMA_50'] = pd.to_numeric(ohlc_data['close'], errors='coerce').rolling(window=50).mean()
 
     # Create a candlestick chart using Plotly
     fig = go.Figure(data=[go.Candlestick(x=ohlc_data.index,

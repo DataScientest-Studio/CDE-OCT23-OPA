@@ -1,8 +1,7 @@
 import logging
-import uuid
-
 from cassandra.cluster import Cluster, DCAwareRoundRobinPolicy
 from cassandra.query import BatchStatement, ConsistencyLevel
+from cassandra.cluster import Cluster
 from pyspark.sql import SparkSession
 from pyspark.sql.functions import from_json, col, exists
 from pyspark.sql.types import StructType, StructField, StringType, FloatType, TimestampType
@@ -23,12 +22,13 @@ def create_table(session):
     try:
         session.execute("""
         CREATE TABLE IF NOT EXISTS spark_streams.BTCUSDT (
-            id bigint PRIMARY KEY,
             symbol TEXT,
+            timestamp TIMESTAMP,
+            id bigint,
             price FLOAT,
             quantity FLOAT,
-            timestamp TIMESTAMP
-            );
+            PRIMARY KEY ((symbol, timestamp), id)
+        ) WITH CLUSTERING ORDER BY (id ASC);
         """)
         logging.info("Table created successfully")
     except Exception as e:
@@ -41,10 +41,9 @@ def insert_data(batch_df, epoch_id):
         cluster = Cluster(['localhost'], port=9042)
         session = cluster.connect('spark_streams')
 
-        # Use 'id' as the primary key
-        check_statement = session.prepare("SELECT id FROM spark_streams.BTCUSDT WHERE id = ?")
+        # Prepared statement to insert data into BTCUSDT
         prepared_statement = session.prepare("""
-        INSERT INTO BTCUSDT (id, symbol, price, quantity, timestamp)
+        INSERT INTO BTCUSDT (symbol, timestamp, id, price, quantity)
         VALUES (?, ?, ?, ?, ?)
         """)
 
@@ -54,17 +53,12 @@ def insert_data(batch_df, epoch_id):
             # Ensure 'id' is an integer
             row_id = int(row.id)  # Convert 'id' to integer
 
-            # Check if the row already exists using 'id'
-            exists = session.execute(check_statement, (row_id,))
-            if not exists.one():  # If no rows are returned
-                try:
-                    session.execute(prepared_statement,
-                                    (row_id, row.symbol, row.price, row.qty, row.time))
-                    logging.info(f"Inserted row: {row}")
-                except Exception as e:
-                    logging.error(f"Failed to insert row: {row}. Error: {e}")
-            else:
-                logging.info(f"Row already exists with id {row_id}, skipping insertion.")
+            try:
+                session.execute(prepared_statement,
+                                (row.symbol, row.time, row_id, row.price, row.qty))
+                logging.info(f"Inserted row: {row}")
+            except Exception as e:
+                logging.error(f"Failed to insert row: {row}. Error: {e}")
 
     except Exception as e:
         logging.exception(f"Could not insert batch {epoch_id}")
@@ -131,10 +125,10 @@ def create_cassandra_connection():
         )
         cass_session = cluster.connect()
         logging.info("Cassandra connection created successfully!")
-        return cass_session
+        return cluster, cass_session  # Return both cluster and session
     except Exception as e:
         logging.exception("Couldn't create the Cassandra connection")
-        return None
+        return None, None
 
 
 def main():
